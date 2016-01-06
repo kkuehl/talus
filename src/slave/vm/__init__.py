@@ -147,7 +147,7 @@ class ImageManager(object):
 
 		# XXX DEBUG
 		# since we're running on the master, they're always up to date
-		return True
+		# return True
 
 		dest = os.path.join(LIBVIRT_BASE, image_id_to_volume(image_id))
 		if not os.path.exists(dest):
