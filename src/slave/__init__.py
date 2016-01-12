@@ -432,6 +432,7 @@ class Slave(threading.Thread):
 				idx			= data["idx"],
 				job			= data["job"],
 				data		= data["data"],
+                slave       = self._hostname,
 			)),
 			self.AMQP_JOB_STATUS_QUEUE
 		)

@@ -1,5 +1,5 @@
 .. _getting_started:
-.. _talus_client: https://github.com/optiv-labs/talus_client
+.. _talus_client: https://github.com/e/talus_client
 .. _Vagrant: https://www.vagrantup.com/
 .. _Vagrantfile: https://docs.vagrantup.com/v2/vagrantfile/index.html
 .. _cmd: https://docs.python.org/2/library/cmd.html
@@ -39,13 +39,13 @@ The talus_client_ module can be installed globally:
 
 .. code-block:: bash
 
-   pip install --upgrade https://github.com/optiv-labs/talus_client.git@master#egg=talus_client
+   pip install --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg=talus_client
 
 or locally:
 
 .. code-block:: bash
 
-   pip install --user --upgrade https://github.com/optiv-labs/talus_client.git@master#egg=talus_client
+   pip install --user --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg=talus_client
 
 or in a virtual environment (my preferred method):
 
@@ -53,7 +53,7 @@ or in a virtual environment (my preferred method):
 
    virtualenv path_to_venv
    source path_to_venv/bin/activate
-   pip install --upgrade https://github.com/optiv-labs/talus_client.git@master#egg=talus_client
+   pip install --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg=talus_client
    ...
    # to exit the virtual environment, use the deactivate command
    deactivate
