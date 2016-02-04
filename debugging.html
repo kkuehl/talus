@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Debugging Talus &mdash; Talus 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Talus 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Workflows/Lifecycles" href="workflow_lifecycle.html"/>
+        <link rel="prev" title="Getting Started" href="getting_started.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Talus
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Debugging Talus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#master-daemon">Master Daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#restarting">Restarting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#slave-daemon">Slave Daemon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Restarting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Vagrant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libvirt">Libvirt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#libvirtd">Libvirtd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#virsh">Virsh</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mongodb">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#amqp">AMQP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#webserver">Webserver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_lifecycle.html">Workflows/Lifecycles</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Talus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Debugging Talus</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/debugging.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="debugging-talus">
+<h1>Debugging Talus<a class="headerlink" href="#debugging-talus" title="Permalink to this headline">¶</a></h1>
+<p>There are many components to talus. This will attempt to give some insight into ways you might
+go about debugging the individual components of talus.</p>
+<div class="section" id="master-daemon">
+<h2>Master Daemon<a class="headerlink" href="#master-daemon" title="Permalink to this headline">¶</a></h2>
+<p>The talus master daemon is an upstart job. The job configuration is found
+in <code class="code docutils literal"><span class="pre">/etc/init/talus_master.conf</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>description <span class="s2">&quot;Talus Master Daemon&quot;</span>
+author          <span class="s2">&quot;Optiv Labs&quot;</span>
+
+start on filesystem or runlevel <span class="o">[</span>2345<span class="o">]</span>
+stop on shutdown
+respawn
+
+script
+        /home/talus/talus/src/master/bin/start_raw em1
+end script
+</pre></div>
+</div>
+<p>Logs for the master daemon can be found in <code class="code docutils literal"><span class="pre">/var/log/upstart/talus_master.log</span></code>. These logs
+are automatically rotated and are created by upstart.</p>
+<div class="section" id="restarting">
+<h3>Restarting<a class="headerlink" href="#restarting" title="Permalink to this headline">¶</a></h3>
+<p>To restart the master daemon (say, after having made some code changes, to force it to reconnect
+to the AMQP server, etc), run <code class="code docutils literal"><span class="pre">sudo</span> <span class="pre">stop</span> <span class="pre">talus_master</span></code>. This <em>should</em> stop the master
+daemon. If after a few seconds the master daemon does not gracefully quit (confirm with <code class="code docutils literal"><span class="pre">ps</span> <span class="pre">aux</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">master</span></code>),
+force-kill any running master daemons with a good ol&#8217; <code class="code docutils literal"><span class="pre">kill</span> <span class="pre">-KILL</span></code>.</p>
+<p>After the master daemon has been killed, start it again with <code class="code docutils literal"><span class="pre">sudo</span> <span class="pre">start</span> <span class="pre">talus_master</span></code>.</p>
+</div>
+</div>
+<div class="section" id="slave-daemon">
+<h2>Slave Daemon<a class="headerlink" href="#slave-daemon" title="Permalink to this headline">¶</a></h2>
+<p>The talus slave daemon that is present on each of the slaves is an upstart job. The job
+configuration is found in <code class="code docutils literal"><span class="pre">/etc/init/talus_slave.conf</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>description <span class="s2">&quot;Talus Slave Daemon&quot;</span>
+author          <span class="s2">&quot;Optiv Labs&quot;</span>
+
+start on <span class="o">(</span>started networking<span class="o">)</span>
+stop on shutdown
+respawn
+
+script
+        aa-complain /usr/sbin/libvirtd
+        /home/talus/talus/src/slave/bin/start_raw 1.1.1.3 <span class="m">10</span> em1 2&gt;<span class="p">&amp;</span><span class="m">1</span> &gt;&gt; /var/log/talus/slave.log
+end script
+</pre></div>
+</div>
+<p>The aa-complain is to force apparmor to only complain about libvirtd and not
+enforce any policies. Libvirt runs extremely slow if apparmor is allowed to enforce policies
+on libvirtd. There might be a better way around this, but this works.</p>
+<div class="section" id="id1">
+<h3>Restarting<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>To restart the slave daemon, run <code class="code docutils literal"><span class="pre">sudo</span> <span class="pre">restart</span> <span class="pre">talus_slave</span></code>. The slave daemon will
+gracefully shutdown, killing all running vms before doing so. Sometimes this can take up to a minute
+before the slave daemon has completely quit.</p>
+<p>If you are paranoid that the slave daemon isn&#8217;t going restart cleanly, stop and start the daemon
+separately, checking in between to make sure that it had completely exited before starting it again.
+If it never fully quits, force-kill it with <code class="code docutils literal"><span class="pre">kill</span> <span class="pre">-KILL</span></code>.</p>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Vagrant<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.vagrantup.com/">Vagrant</a> is a VM configuration utility (or that&#8217;s how I think of it). It is intended for developers
+to easily share build/development/production environments with other developers by only sharing their
+<a class="reference external" href="https://docs.vagrantup.com/v2/vagrantfile/index.html">Vagrantfile</a>. The <a class="reference external" href="https://docs.vagrantup.com/v2/vagrantfile/index.html">Vagrantfile</a> is a ruby script and can configure a VM from a base image. A lot of the
+work that has gone into Vagrant is about being able to configure VMs from a <a class="reference external" href="https://docs.vagrantup.com/v2/vagrantfile/index.html">Vagrantfile</a>.</p>
+<p>Talus uses Vagrant during image configuration to provide a way for the user to perform automatic
+VM updates (e.g. run a script after every MS update to create a new image with the latest patches, etc).</p>
+<p>Vagrant images (or <cite>boxes</cite> in Vagrant lingo) are stored in <code class="code docutils literal"><span class="pre">/root/.vagrant.d/boxes</span></code>. When a box is
+started, the image in the boxes directory is uploaded to <code class="code docutils literal"><span class="pre">/var/lib/libvirt/images</span></code> and then is
+run.</p>
+<p>Since we aren&#8217;t using VMWare or VirtualBox (but litvirt instead), talus requires the vagrant-libvirt
+plugin to be added. During development of talus, several pull requests were submitted to this plugin
+to give us the functionality we needed.</p>
+</div>
+<div class="section" id="libvirt">
+<h2>Libvirt<a class="headerlink" href="#libvirt" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="libvirtd">
+<h3>Libvirtd<a class="headerlink" href="#libvirtd" title="Permalink to this headline">¶</a></h3>
+<p>Talus uses libvirt. Libvirt runs as a daemon (<code class="code docutils literal"><span class="pre">libvirtd</span></code>) and accepts messages via a unix domain
+socket.</p>
+<p>There have been major problems with using libvirt and networking issues amongst the vms. Talus has
+resorted to using static mac address that mapped to static ip addresses that were defined in
+the <code class="code docutils literal"><span class="pre">talus-network</span></code> xml, as well as disabling mac filtering with ebtables in <code class="code docutils literal"><span class="pre">/etc/libvirt/qemu.conf</span></code>
+by setting <code class="code docutils literal"><span class="pre">mac_filters=0</span></code>.</p>
+<p>Another notable configuration setting with libvirt is to set the vnc listen ip to <code class="code docutils literal"><span class="pre">0.0.0.0</span></code> in
+<code class="code docutils literal"><span class="pre">/etc/libvirt/qemu.conf</span></code>. Otherwise you won&#8217;t be able to remotely VNC to any running VMs.</p>
+<p>Libvirt is restarted with <code class="code docutils literal"><span class="pre">/etc/init.d/libvirt-bin</span> <span class="pre">restart</span></code>.</p>
+<p>Logs for libvirtd are found in in <code class="code docutils literal"><span class="pre">/var/log/libvirt/libvirtd.log</span></code>, and logs for individual
+domains are found in <code class="code docutils literal"><span class="pre">/var/log/libvirt/qemu/&lt;domain_name&gt;.log</span></code> (iirc).</p>
+</div>
+<div class="section" id="virsh">
+<h3>Virsh<a class="headerlink" href="#virsh" title="Permalink to this headline">¶</a></h3>
+<p><code class="code docutils literal"><span class="pre">virsh</span></code> is a command-line interface to sending messages to the libvirt daemon.</p>
+<p>Common commands include:</p>
+<ul>
+<li><p class="first"><code class="code docutils literal"><span class="pre">virsh</span> <span class="pre">list</span> <span class="pre">--all</span></code> - list all of the defined/running domains (vms)</p>
+</li>
+<li><p class="first"><code class="code docutils literal"><span class="pre">virsh</span> <span class="pre">destroy</span> <span class="pre">&lt;domain_id_or_name&gt;</span></code> - forcefully destroy a domain</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="code docutils literal"><span class="pre">virsh</span> <span class="pre">dumpxml</span> <span class="pre">&lt;domain_id_or_name&gt;</span></code> - dump the xml that defines the domain</dt>
+<dd><ul class="first last simple">
+<li>it may be useful to grep this for <code class="code docutils literal"><span class="pre">vnc</span></code> to see which vnc port it&#8217;s on</li>
+<li>it may be useful to grep this for <code class="code docutils literal"><span class="pre">mac</span></code> to see what the mac address is (can correlate macs to ips with <code class="code docutils literal"><span class="pre">arp</span> <span class="pre">-an</span></code>)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><code class="code docutils literal"><span class="pre">virsh</span> <span class="pre">net-list</span></code> - list defined networks. Talus uses its own defined network <code class="code docutils literal"><span class="pre">talus-network</span></code></p>
+</li>
+<li><p class="first"><code class="code docutils literal"><span class="pre">virsh</span> <span class="pre">net-dumpxml</span> <span class="pre">&lt;network-name&gt;</span></code> - dump the xml that defines a network</p>
+</li>
+</ul>
+<p>I commonly found myself doing something like:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="k">for</span> id in <span class="k">$(</span>sudo virsh list --all <span class="p">|</span> tail -n+3 <span class="p">|</span> awk <span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span> <span class="p">;</span> <span class="k">do</span> sudo virsh destroy <span class="nv">$id</span> <span class="p">;</span> <span class="k">done</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>Docker<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Several talus components are containerized using <a class="reference external" href="https://www.docker.com/">Docker</a>. Docker (essentially a wrapper around linux containers)
+makes it easy to configure environments for a service. It uses an incremental build process to build containers.</p>
+<p>In the talus source tree, the <code class="code docutils literal"><span class="pre">web</span></code>, <code class="code docutils literal"><span class="pre">amqp</span></code>, and <code class="code docutils literal"><span class="pre">db</span></code> directories contain scripts in
+their bin directories to build, start, and stop their respective docker containers.</p>
+<p>Docker users a <a class="reference external" href="https://docs.docker.com/reference/builder/">Dockerfile</a> to define the individual steps needed to build the container. Generally speaking you
+either <code class="code docutils literal"><span class="pre">RUN</span></code> a command inside the container, or <code class="code docutils literal"><span class="pre">ADD</span></code> files and directories to the container. A default
+entrypoint int the container specifies how the container should be started, unless an overriding <code class="code docutils literal"><span class="pre">--entrypoint</span></code>
+parameter is passed with the <code class="code docutils literal"><span class="pre">docker</span> <span class="pre">run</span></code> command.</p>
+<p>Dockers containers can be linked to other already-running docker containers. For example, the script to run the
+<code class="code docutils literal"><span class="pre">talus_web</span></code> container links itself to the <code class="code docutils literal"><span class="pre">talus_db</span></code> container (<code class="code docutils literal"><span class="pre">--link</span> <span class="pre">...</span></code>), exposes several ports so that it
+can accept remote connections (<code class="code docutils literal"><span class="pre">-p</span> <span class="pre">...</span></code>), and mounts several volumes inside the container (<code class="code docutils literal"><span class="pre">-v</span> <span class="pre">...</span></code>). The full script can be found in <code class="code docutils literal"><span class="pre">talus/src/web/bin/start</span></code> in the source tree:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo docker run <span class="se">\</span>
+        --rm <span class="se">\</span>
+        --link talus_db:talus_db <span class="se">\</span>
+        -p 80:80 <span class="se">\</span>
+        -p 8001:8001 <span class="se">\</span>
+        -v /var/lib/libvirt/images:/images:ro <span class="se">\</span>
+        -v /var/log/talus:/logs <span class="se">\</span>
+        -v /tmp/talus/tmp:/tmp <span class="se">\</span>
+        -v /talus/install:/talus_install <span class="se">\</span>
+        -v /talus/talus_code_cache:/code_cache <span class="se">\</span>
+        --name talus_web <span class="se">\</span>
+        <span class="nv">$@</span> talus_web
+</pre></div>
+</div>
+</div>
+<div class="section" id="mongodb">
+<h2>MongoDB<a class="headerlink" href="#mongodb" title="Permalink to this headline">¶</a></h2>
+<p>There is a specific order that docker containers must be started on the master. Most of the containers/services
+rely on the <code class="code docutils literal"><span class="pre">talus_db</span></code> container being up and running. If the master needed to be rebooted and things
+start complaining about connections, try shutting them down and restarting them in this order:</p>
+<ol class="arabic simple">
+<li><code class="code docutils literal"><span class="pre">start</span> <span class="pre">talus_db</span></code></li>
+<li><code class="code docutils literal"><span class="pre">start</span> <span class="pre">talus_amqp</span></code> - this does not depend on talus_db, so this could be first if you wanted)</li>
+<li><code class="code docutils literal"><span class="pre">start</span> <span class="pre">talus_web</span></code></li>
+<li><code class="code docutils literal"><span class="pre">start</span> <span class="pre">talus_master</span></code></li>
+<li><code class="code docutils literal"><span class="pre">start</span> <span class="pre">talus_slave</span></code> - if you also have a slave daemon running on the master server</li>
+</ol>
+<p>Mongodb logs are stored in <code class="code docutils literal"><span class="pre">/var/log/talus/mongodb/*</span></code>.</p>
+<p>Mongodb data is stored in <code class="code docutils literal"><span class="pre">/talus/data/*</span></code>.</p>
+<p>Since the db is running in a container, you can&#8217;t drop into a mongo shell on the master
+and attempt to connect to localhost (and actually, no mongo tools are required to be installed
+on the master, so you might not be able to that out of the box anyways). You could either lookup the connection
+info of the <code class="code docutils literal"><span class="pre">talus_db</span></code> container (which port it&#8217;s forwarded to locally), or you can start a
+temporary container that has all of the necessary mongodb tools that will drop you into a mongo
+shell. I highly recommend the second approach.</p>
+<p>Such a script exists in the source tree at <code class="code docutils literal"><span class="pre">talus/src/db/bin/shell</span></code>. Run this script, and you
+should be dropped into a mongo shell. You will have to tell it which database to use (the <code class="code docutils literal"><span class="pre">talus</span></code>
+database), after which you can perform raw mongodb commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre>talus@:~<span class="nv">$ </span>talus/src/db/bin/shell
+MongoDB shell version: 3.0.6
+connecting to: talus_db:27017/test
+Welcome to the MongoDB shell.
+For interactive <span class="nb">help</span>, <span class="nb">type</span> <span class="s2">&quot;help&quot;</span>.
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings:
+2015-10-28T22:32:32.001+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> ** WARNING: You are running this process as the root user, which is not recommended.
+2015-10-28T22:32:32.001+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span>
+2015-10-28T22:32:32.001+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> ** WARNING: You are running on a NUMA machine.
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> **          We suggest launching mongod like this to avoid performance problems:
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> **              numactl --interleave<span class="o">=</span>all mongod <span class="o">[</span>other options<span class="o">]</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is <span class="s1">&#39;always&#39;</span>.
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> **        We suggest setting it to <span class="s1">&#39;never&#39;</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> ** WARNING: /sys/kernel/mm/transparent_hugepage/defrag is <span class="s1">&#39;always&#39;</span>.
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span> **        We suggest setting it to <span class="s1">&#39;never&#39;</span>
+2015-10-28T22:32:32.002+0000 I CONTROL  <span class="o">[</span>initandlisten<span class="o">]</span>
+rs0:PRIMARY&gt; use talus
+switched to db talus
+rs0:PRIMARY&gt; show collections
+code
+file_set
+fs.chunks
+fs.files
+image
+job
+master
+o_s
+result
+slave
+system.indexes
+task
+tmp_file
+rs0:PRIMARY&gt; db.image.find<span class="o">()</span>
+</pre></div>
+</div>
+<p>Notice how the prompt says <code class="code docutils literal"><span class="pre">rs0:PRIMARY</span></code>. This is HUGELY important. Talus uses a single-host replica set with mongodb
+to be able to essentially have a cursor that will <code class="code docutils literal"><span class="pre">tail</span> <span class="pre">-f</span></code> all of the changes that occur in the database. This works
+because, as a replica set, the intention is that database changes will have to be communicated to other databases on
+different hosts (I believe shard is the term mongodb uses). A special collection called an <code class="code docutils literal"><span class="pre">oplog</span></code> is where all
+of these changes are stored.</p>
+<p>Talus uses the oplog to be notified of changes in the database so it won&#8217;t have to poll the database for changes.</p>
+<p>Back to the prompt and the <code class="code docutils literal"><span class="pre">rs0:PRIMARY</span></code>. If the prompt <em>DOES NOT</em> say PRIMARY after <code class="code docutils literal"><span class="pre">rs0</span></code> (replicat-set 0),
+then you&#8217;ll have to run a few commands in a mongo shell.</p>
+<p>In the <code class="code docutils literal"><span class="pre">talus/src/db/startup.sh</span></code> script, a command is run that attempts to ensure that the current replica set
+on talus (the only one), is also the PRIMARY replica set. Not being the primary replica set (called a slave) means that
+you cannot make changes to the data (iirc). The code the startup.sh script runs in a mongo shell is below:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">cfg</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_id&quot;</span> <span class="o">:</span><span class="s2">&quot;rs0&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;_id&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;talus_db:27017&quot;</span><span class="p">}]}</span>
+<span class="nx">rs</span><span class="p">.</span><span class="nx">initiate</span><span class="p">(</span><span class="nx">cfg</span><span class="p">)</span>
+<span class="nx">rs</span><span class="p">.</span><span class="nx">reconfig</span><span class="p">(</span><span class="nx">cfg</span><span class="p">,</span> <span class="p">{</span><span class="nx">force</span><span class="o">:</span><span class="kc">true</span><span class="p">})</span>
+<span class="nx">rs</span><span class="p">.</span><span class="nx">slaveOk</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you notice that the shell is not PRIMARY, you would usually only have to run
+the <code class="code docutils literal"><span class="pre">rs.slaveOk()</span></code> command from a mongo shell to get things back to
+normal. You might need the other commands if the previously mentioned command
+fails to work.</p>
+</div>
+<div class="section" id="amqp">
+<h2>AMQP<a class="headerlink" href="#amqp" title="Permalink to this headline">¶</a></h2>
+<p>AMQP is also containerized with docker and is run as an upstart job. The upstart config for the <code class="code docutils literal"><span class="pre">talus_amqp</span></code>
+upstart job is found at <code class="code docutils literal"><span class="pre">/etc/init/talus_amqp.conf</span></code>.</p>
+<p>Logs for amqp should be found at <code class="code docutils literal"><span class="pre">/var/log/talus/rabbitmq/*</span></code>.</p>
+<p>This should rarely have to be debugged. Since it is debugged so rarely, debugging-specific scripts were never added.</p>
+<p>However, if AMQP was suspected of being a problem, here&#8217;s a few things I&#8217;d check
+out:</p>
+<ul>
+<li><p class="first">restart amqp with <code class="code docutils literal"><span class="pre">sudo</span> <span class="pre">restart</span> <span class="pre">talus_amqp</span></code></p>
+</li>
+<li><p class="first">look in the logs at <code class="code docutils literal"><span class="pre">/var/log/talus/rabbitmq/*</span></code></p>
+</li>
+<li><dl class="first docutils">
+<dt>setup the <a class="reference external" href="https://www.rabbitmq.com/management.html">RabbitMQ management console</a> and expose ports in the <code class="code docutils literal"><span class="pre">talus_amqp</span></code></dt>
+<dd><p class="first last">container so that you can access the management console remotely.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>stop the <code class="code docutils literal"><span class="pre">talus_amqp</span></code> container and run it the container manually with</dt>
+<dd><p class="first last">the entrypoint set to bash so that you can do additional debugging:
+* <code class="code docutils literal"><span class="pre">talus/src/amqp/bin/start</span> <span class="pre">--entrypoint</span> <span class="pre">bash</span></code></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="webserver">
+<h2>Webserver<a class="headerlink" href="#webserver" title="Permalink to this headline">¶</a></h2>
+<p>Debugging the webserver should be fairly simple. The webserver is containerized
+using docker and is run as an upstart job. The upstart script is found in
+<code class="code docutils literal"><span class="pre">/etc/init/talus_web.conf</span></code>.</p>
+<p>Logs for the talus web services are found in
+<code class="code docutils literal"><span class="pre">/var/log/talus/apache2/*.log</span></code>.</p>
+<p>The dynamic portion of the web application is made with django. Debugging django
+application is fairly straightforward, especially if you use pdb.</p>
+<p>The start script (<code class="code docutils literal"><span class="pre">talus/src/web/bin/start</span></code>) has some logic to check for a
+dev parameter. If present, it will mount the directories local to the start script
+inside the container so that you won&#8217;t have to rebuild the container every time
+you need to make some code changes.</p>
+<p>My usual workflow goes like this:</p>
+<ol class="arabic simple">
+<li>Make sure <code class="code docutils literal"><span class="pre">talus_db</span></code> is running</li>
+<li>Scp/rsync my code into the remote <code class="code docutils literal"><span class="pre">talus/src/web</span></code> directory</li>
+<li>Start a dev talus_web container with bash as the new entrypoint:</li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre>talus:~<span class="nv">$ </span>talus/src/web/bin/start dev --entrypoint bash
+Error response from daemon: Cannot <span class="nb">kill </span>container talus_web_dev: no such id: talus_web_dev
+Error: failed to <span class="nb">kill </span>containers: <span class="o">[</span>talus_web_dev<span class="o">]</span>
+Error response from daemon: no such id: talus_web_dev
+Error: failed to remove containers: <span class="o">[</span>talus_web_dev<span class="o">]</span>
+root@54f7352ff90b:/# <span class="nb">cd </span>web
+root@54f7352ff90b:/web# ls
+README  api  code_cache  launch.sh  manage.py  passwords  requirements  talus_web
+root@54f7352ff90b:/web# python manage.py runserver 0.0.0.0:8080
+DEBUG IS TRUE
+DEBUG IS TRUE
+Performing system checks...
+
+System check identified no issues <span class="o">(</span><span class="m">0</span> silenced<span class="o">)</span>.
+October 30, <span class="m">2015</span> - 21:20:21
+Django version 1.8.1, using settings <span class="s1">&#39;talus_web.settings&#39;</span>
+Starting development server at http://0.0.0.0:8080/
+Quit the server with CONTROL-C.
+</pre></div>
+</div>
+<p>At this point you will be able to break and step through the handling of any requests
+(if you have added a <code class="code docutils literal"><span class="pre">import</span> <span class="pre">pdb</span> <span class="pre">;</span> <span class="pre">pdb.set_trace()</span></code> somewhere). Remember that
+port <code class="code docutils literal"><span class="pre">8080</span></code> is exposed by default for the dev web container, so be sure to
+run manage.py with port 8080 on ip 0.0.0.0.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="workflow_lifecycle.html" class="btn btn-neutral float-right" title="Workflows/Lifecycles" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Optiv Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

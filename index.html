@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Talus &mdash; Talus 0.0.1 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -30,10 +30,11 @@
   
 
   
-    <link rel="top" title="Talus 0.0.1 documentation" href="#"/> 
+    <link rel="top" title="Talus 0.0.1 documentation" href="#"/>
+        <link rel="next" title="Getting Started" href="getting_started.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -43,11 +44,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
-          <a href="#" class="fa fa-home"> Talus</a>
-        
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> Talus
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -55,19 +72,24 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-      </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
           
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-              <ul class="simple">
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Talus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_lifecycle.html">Workflows/Lifecycles</a></li>
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -82,48 +104,73 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="#">Docs</a> &raquo;</li>
       
     <li>Talus</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="talus">
 <h1>Talus<a class="headerlink" href="#talus" title="Permalink to this headline">¶</a></h1>
 <p>Talus is a distributed virtualized tool framework that is intended to ease
-the running of and result collection of tools in virtualized environments.</p>
-<p>Generally speaking, talus has two main components:</p>
-<ol class="arabic simple">
-<li>Master</li>
-<li>Slave(s)</li>
-</ol>
-<p>Talus users interact with Talus via <code class="docutils literal"><span class="pre">git</span></code> and the <span class="xref std std-ref">talus_client</span>.</p>
-<div class="section" id="master">
-<h2>Master<a class="headerlink" href="#master" title="Permalink to this headline">¶</a></h2>
-<p>The Talus master is responsible for managing the slaves and processing
-commands from the user.</p>
-<p>The master is made up of three main parts:</p>
-<ol class="arabic simple">
-<li>Web API</li>
-<li>RabbitMQ AMQP</li>
-<li>MongoDB</li>
-<li>Master Daemon</li>
-</ol>
-<p>Clients interact with Talus via the Web API, which only makes changes to the
-MongoDB database.</p>
+the running and result collection of tools in virtualized environments.</p>
 <div class="toctree-wrapper compound">
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#id2">Talus Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#creating-images">Creating Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#setting-up-an-image">Setting up an Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#tools-components">Tools &amp; Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#creating-a-task">Creating a Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#creating-and-running-a-job">Creating and Running a Job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#job-status-info">Job Status/Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#crashes">Crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#slave-status-info">Slave Status/Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#master-status-info">Master Status/Info</a></li>
 </ul>
-</div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Talus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#master-daemon">Master Daemon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#slave-daemon">Slave Daemon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#id2">Vagrant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#libvirt">Libvirt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#id3">Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#mongodb">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#amqp">AMQP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#webserver">Webserver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_lifecycle.html">Workflows/Lifecycles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#image">Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#code">Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#task">Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#job">Job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#results">Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#crashes">Crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#master-daemon">Master Daemon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_lifecycle.html#slave-daemon">Slave Daemon</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -136,8 +183,16 @@ MongoDB database.</p>
 </div>
 
 
+           </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
   
 
   <hr/>
@@ -145,12 +200,13 @@ MongoDB database.</p>
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Optiv Labs.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
 </footer>
+
         </div>
       </div>
 

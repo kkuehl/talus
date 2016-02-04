@@ -8,36 +8,14 @@ Talus
 =====
 
 Talus is a distributed virtualized tool framework that is intended to ease
-the running of and result collection of tools in virtualized environments.
-
-Generally speaking, talus has two main components:
-
-1. Master
-2. Slave(s)
-
-Talus users interact with Talus via ``git`` and the :ref:`talus_client`.
-
-Master
-------
-
-The Talus master is responsible for managing the slaves and processing
-commands from the user.
-
-The master is made up of three main parts:
-
-1. Web API
-2. RabbitMQ AMQP
-3. MongoDB
-4. Master Daemon
-
-Clients interact with Talus via the Web API, which only makes changes to the
-MongoDB database.
-
+the running and result collection of tools in virtualized environments.
 
 .. toctree::
    :maxdepth: 2
 
-   generated
+   getting_started
+   debugging
+   workflow_lifecycle
 
 Indices and tables
 ==================

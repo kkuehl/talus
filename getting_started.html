@@ -1,0 +1,1128 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; Talus 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Talus 0.0.1 documentation" href="index.html"/>
+        <link rel="next" title="Debugging Talus" href="debugging.html"/>
+        <link rel="prev" title="Talus" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Talus
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Talus Client</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#help">Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-images">Creating Images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-scratch">From Scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-a-base-image">From a Base Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#re-configuring-an-existing-image">(re)Configuring an Existing Image</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-an-image">Setting up an Image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prebootstrap">Prebootstrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-requirements">General Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows-requirements">Windows Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-components">Tools &amp; Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#definitions">Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#git-repo">Git Repo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-new-code">Creating New Code</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-task">Creating a Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-and-running-a-job">Creating and Running a Job</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#limit-and-progress">Limit and Progress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#priorities">Priorities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#job-status-info">Job Status/Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results">Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding">Adding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listing">Listing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#crashes">Crashes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Listing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#info">Info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exporting">Exporting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#slave-status-info">Slave Status/Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#master-status-info">Master Status/Info</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging Talus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow_lifecycle.html">Workflows/Lifecycles</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Talus</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/getting_started.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>Getting Started<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>All interactions with Talus are performed through a REST API. Currently the
+only UI to talus that uses the REST API is a command line interface:
+<a class="reference external" href="https://github.com/e/talus_client">talus_client</a>.</p>
+<div class="section" id="id2">
+<h2>Talus Client<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> is python-based CLI that uses nested <a class="reference external" href="https://docs.python.org/2/library/cmd.html">cmd</a>.Cmd classes to allow the
+user to either peform actions interactively, or via command-line flags.</p>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> module can be installed globally:</p>
+<div class="highlight-bash"><div class="highlight"><pre>pip install --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg<span class="o">=</span>talus_client
+</pre></div>
+</div>
+<p>or locally:</p>
+<div class="highlight-bash"><div class="highlight"><pre>pip install --user --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg<span class="o">=</span>talus_client
+</pre></div>
+</div>
+<p>or in a virtual environment (my preferred method):</p>
+<div class="highlight-bash"><div class="highlight"><pre>virtualenv path_to_venv
+<span class="nb">source </span>path_to_venv/bin/activate
+pip install --upgrade https://github.com/d0c-s4vage/talus_client.git@master#egg<span class="o">=</span>talus_client
+...
+<span class="c"># to exit the virtual environment, use the deactivate command</span>
+deactivate
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<p>When running the <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> for the first time you will be prompted to enter
+the url where the talus REST API is available, as well as a username that you
+would like all models/jobs/images/etc to be tagged with that you create:</p>
+<div class="highlight-txt"><div class="highlight"><pre>(venv)zorniger [ talus_client ]: talus
+You don&#39;t have a ~/.talusrc. Give me the URL (and port) of the talus master web server.
+E.g. http://some.host.name:55555
+your turn: http://master.talus
+Are you sure the host is &#39;http://master.talus&#39;? (not a trick question) (y/n): y
+cool
+You also don&#39;t have a username. Make one up please (and be reasonable): james
+You want to use &#39;james&#39; as your username? (y/n) y
+ok, nice to meet you, *quote* james *quote*
+talus&gt;
+</pre></div>
+</div>
+<p>Information about the location of the talus REST API as well as your &#8220;username&#8221;
+are stored in a <code class="code docutils literal"><span class="pre">~/.talusrc</span></code> json file:</p>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span><span class="nt">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;http://master.talus&quot;</span><span class="p">,</span> <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;james&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> is composed of nested <a class="reference external" href="https://docs.python.org/2/library/cmd.html">cmd</a>.Cmd modules. All commands can be
+performed via command-line flags:</p>
+<div class="highlight-bash"><div class="highlight"><pre>talus job create task_1 --priority <span class="m">80</span> --limit <span class="m">1</span> --debug
+</pre></div>
+</div>
+<p>Or interactively as shown below. Note that if you want to drop straight into one
+of the interactive create shells, use <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">&lt;cmd&gt;</span> <span class="pre">create</span> <span class="pre">--shell</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(venv)zorniger [ talus_client ]: talus
+talus&gt; job
+talus:job&gt; create
+  idx  name                           task.id
+-----  -----------------------------  ------------------------
+    0  task_1                         560eaf0f399892009811f19a
+    1  task_2                         56297fa9c1d7d2002ccec2f8
+    2  task_3                         566a6287a3bfb30003a36918
+    3  task_4                         563131d59392d70102b3a321
+
+Which task should the job be based on? (idx or q): 0
+[+]  basing job on task named u&#39;task_1&#39; (560eaf0f399892009811f19a)
+talus:job:create&gt; show
+name        value                                                            description
+----------  ---------------------------------------------------------------  -------------------------------------------------------------------
+status      {&quot;name&quot;: &quot;run&quot;}                                                  Status of the job (don&#39;t touch)
+priority    50                                                               Priority of the job (0-100, 100 == highest priority)
+task        560eaf0f399892009811f19a                                         The task the job is based on
+name        task_1 2015-10-29 10:40:39.142128                                The name of the job
+tags        [u&#39;james&#39;]                                                       Tags associated with this job
+image       539d8714c3328350080b3df0                                         The image the job should run on
+limit       5                                                                The limit for the task (when does it finish?)
+vm_max      1800                                                             Max vm duration (s) before being forcefully terminated
+queue       jobs                                                             The queue the job should be dripped into (normal use leave blank)
+errors      []                                                               Errors the job has accumulated
+params      {&quot;iters&quot;: 3, &quot;arg1&quot;: &quot;yoyoyo&quot;, &quot;arg2&quot;: &quot;yoyoyoyoyoy&quot;, &quot;comp1...  Parameters (inherited from the chosen task)
+progress    None                                                             Current progress of the job (don&#39;t touch)
+debug       False                                                            If the job should be run in debug mode (logs are always saved)
+timestamps  {}                                                               Timestamps (don&#39;t touch)
+logs        []                                                               Debug logs for this job
+network     whitelist                                                        The network whitelist (E.g. &#39;whitelist:DOMAIN_1,IP_2,DOMAIN_3,...&#39;)
+talus:job:create&gt; set priority 80
+talus:job:create&gt; set limit 1
+talus:job:create&gt; set debug True
+talus:job:create&gt; save
+</pre></div>
+</div>
+</div>
+<div class="section" id="help">
+<h3>Help<a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
+<p>All commands in the <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> have a help command that accepts another command
+as an argument and will display a (hopefully) helpful help message:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> Documents <span class="o">]</span>: talus image <span class="nb">help </span>import
+     import   -   Import an image into Talus
+
+                  import FILE -n NAME -o OSID <span class="o">[</span>-d DESC<span class="o">]</span> <span class="o">[</span>-t TAG1,TAG2,..<span class="o">]</span> <span class="o">[</span>-u USER<span class="o">]</span> <span class="o">[</span>-p PASS<span class="o">]</span> <span class="o">[</span>-i<span class="o">]</span>
+
+                              FILE    The file to import
+                           -o,--os    ID or name of the operating system model
+                         -n,--name    The name of the resulting image <span class="o">(</span>default: basename<span class="o">(</span>FILE<span class="o">))</span>
+                         -d,--desc    A description of the image <span class="o">(</span>default: <span class="s2">&quot;&quot;</span><span class="o">)</span>
+                         -t,--tags    Tags associated with the image <span class="o">(</span>default: <span class="o">[])</span>
+                      -f,--file-id    The id of an already-uploaded file <span class="o">(</span>NOT A NORMAL USE CASE<span class="o">)</span>
+                     -u,--username    The username to be used in the image <span class="o">(</span>default: user<span class="o">)</span>
+                     -p,--password    The password to be used in the image <span class="o">(</span>default: password<span class="o">)</span>
+                  -i,--interactive    To interact with the imported image <span class="k">for</span> setup <span class="o">(</span>default: False<span class="o">)</span>
+
+                  Examples:
+
+                  To import an image from VMWare at <span class="sb">``</span>~/images/win7pro.vmdk<span class="sb">``</span> named <span class="s2">&quot;win 7 pro test&quot;</span>
+                  and to be given a chance to perform some manual setup/checks:
+
+                      image import ~/images/win7pro.vmdk -n <span class="s2">&quot;win 7 pro test&quot;</span> -i -o <span class="s2">&quot;win7pro&quot;</span> -t windows7,x64,IE8
+</pre></div>
+</div>
+</div>
+<div class="section" id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<p>It should also be noted that current actions in the <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> can be
+cancelled with <code class="code docutils literal"><span class="pre">CTRL-C</span></code>. Using the <code class="code docutils literal"><span class="pre">exit</span></code> or similar commands do not
+cancel the current action.</p>
+</div>
+</div>
+<div class="section" id="creating-images">
+<h2>Creating Images<a class="headerlink" href="#creating-images" title="Permalink to this headline">¶</a></h2>
+<p>Images are created and configured on the master node via a remote VNC
+connection (usually port <code class="code docutils literal"><span class="pre">59XX</span></code>). <a class="reference external" href="https://www.vagrantup.com/">Vagrant</a> is used during the
+configuration of images to provide users the flexibility of automatically
+configuring the image via a <a class="reference external" href="https://docs.vagrantup.com/v2/vagrantfile/index.html">Vagrantfile</a> (via a <code class="code docutils literal"><span class="pre">--vagrantfile</span></code> or
+<code class="code docutils literal"><span class="pre">-v</span></code> flag in configure, import and create client commands), or to manually
+(interactively) configure the image (via a <code class="code docutils literal"><span class="pre">--interactive</span></code> or <code class="code docutils literal"><span class="pre">-i</span></code>
+flag).</p>
+<p>Creating, importing, or configuring an image without the <code class="code docutils literal"><span class="pre">-i</span></code> flag will
+cause the master to shut down and save the VM once the Vagrantfile has finished
+running.</p>
+<div class="section" id="from-scratch">
+<h3>From Scratch<a class="headerlink" href="#from-scratch" title="Permalink to this headline">¶</a></h3>
+<p>Creating a base image is done via the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">image</span> <span class="pre">import</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> Documents <span class="o">]</span>: talus image <span class="nb">help </span>import
+     import   -   Import an image into Talus
+
+                  import FILE -n NAME -o OSID <span class="o">[</span>-d DESC<span class="o">]</span> <span class="o">[</span>-t TAG1,TAG2,..<span class="o">]</span> <span class="o">[</span>-u USER<span class="o">]</span> <span class="o">[</span>-p PASS<span class="o">]</span> <span class="o">[</span>-i<span class="o">]</span>
+
+                              FILE    The file to import
+                           -o,--os    ID or name of the operating system model
+                         -n,--name    The name of the resulting image <span class="o">(</span>default: basename<span class="o">(</span>FILE<span class="o">))</span>
+                         -d,--desc    A description of the image <span class="o">(</span>default: <span class="s2">&quot;&quot;</span><span class="o">)</span>
+                         -t,--tags    Tags associated with the image <span class="o">(</span>default: <span class="o">[])</span>
+                      -f,--file-id    The id of an already-uploaded file <span class="o">(</span>NOT A NORMAL USE CASE<span class="o">)</span>
+                     -u,--username    The username to be used in the image <span class="o">(</span>default: user<span class="o">)</span>
+                     -p,--password    The password to be used in the image <span class="o">(</span>default: password<span class="o">)</span>
+                  -i,--interactive    To interact with the imported image <span class="k">for</span> setup <span class="o">(</span>default: False<span class="o">)</span>
+</pre></div>
+</div>
+<p>To import an image from VMWare at <code class="code docutils literal"><span class="pre">~/images/win7pro.vmdk</span></code> named <code class="code docutils literal"><span class="pre">win</span> <span class="pre">7</span> <span class="pre">pro</span> <span class="pre">test</span></code>
+and to be given a chance to perform some manual setup/checks:</p>
+<div class="highlight-bash"><div class="highlight"><pre>talus image import ~/images/win7pro.vmdk -n <span class="s2">&quot;win 7 pro test&quot;</span> -i -o <span class="s2">&quot;win7pro&quot;</span> -t windows7,x64,IE8
+</pre></div>
+</div>
+<p>Note that a valid OS id must be supplied, which can be created via <code class="code docutils literal"><span class="pre">talus</span>
+<span class="pre">os</span> <span class="pre">create</span></code>. Existing OS models can be listed via <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">os</span> <span class="pre">list</span></code>.</p>
+<p>To &#8220;save&#8221; the image, nicely shut down the VM (if it was configured
+interactively). The image&#8217;s status will change to
+&#8220;ready&#8221; once it can be used again.</p>
+</div>
+<div class="section" id="from-a-base-image">
+<h3>From a Base Image<a class="headerlink" href="#from-a-base-image" title="Permalink to this headline">¶</a></h3>
+<p>It is preferred that base images are kept fairly clean, with minimal
+code/programs required to work with talus. Images with specific pre-installed
+requirements should be a new image that is based on a clean base image.</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(venv)zorniger [ Documents ]: talus image help create
+     create   -   Create a new image in talus using an existing base
+                  image. Anything not explicitlyspecified will be
+                  inherited from the base image, except for the name,
+                  which is required.
+
+
+                  create -n NAME -b BASEID_NAME [-d DESC] [-t TAG1,TAG2,..] [-u USER] [-p PASS] [-o OSID] [-i]
+
+                           -o,--os    ID or name of the operating system model
+                         -b,--base    ID or name of the base image
+                         -n,--name    The name of the resulting image (default: basename(FILE))
+                         -d,--desc    A description of the image (default: &quot;&quot;)
+                         -t,--tags    Tags associated with the image (default: [])
+                           --shell    Forcefully drop into an interactive shell
+                  -v,--vagrantfile    A vagrant file that will be used to congfigure the image
+                  -i,--interactive    To interact with the imported image for setup (default: False)
+</pre></div>
+</div>
+<p>To create a new image based on the image with id <code class="code docutils literal"><span class="pre">222222222222222222222222</span></code> and adding
+a new description and allowing for manual user setup:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>talus image create -b 222222222222222222222222 -d &quot;some new description&quot; -i
+</pre></div>
+</div>
+<p>To &#8220;save&#8221; the image, nicely shut down the VM (if it was configured
+interactively). The image&#8217;s status will change to
+&#8220;ready&#8221; once it can be used again.</p>
+</div>
+<div class="section" id="re-configuring-an-existing-image">
+<h3>(re)Configuring an Existing Image<a class="headerlink" href="#re-configuring-an-existing-image" title="Permalink to this headline">¶</a></h3>
+<p>Images are allowed to be reconfigured if no images are based on the image that you want to configure.
+Both configuration flags apply here was well (<code class="code docutils literal"><span class="pre">-v</span></code> to specify a Vagrantfile and <code class="code docutils literal"><span class="pre">-i</span></code> to
+configure the image interactively):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>(venv)zorniger [ Documents ]: talus image help configure
+  configure   -   Configure an existing image in talus
+
+                  configure ID_OR_NAME [-v PATH_TO_VAGRANTFILE] [-i]
+
+                        id_or_name    The ID or name of the image that is to be configured (required)
+                  -i,--interactive    To interact with the imported image for setup (default: False)
+                  -v,--vagrantfile    The path to the vagrantfile that should be used to configure the image (default=None)
+</pre></div>
+</div>
+<p>To configure an image named <code class="code docutils literal"><span class="pre">Windows</span> <span class="pre">7</span> <span class="pre">x64</span> <span class="pre">Test</span></code>, using a vagrantfile found
+at <code class="code docutils literal"><span class="pre">~/vagrantfiles/UpdateIE</span></code> with no interaction:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>talus image configure &quot;Windows 7 x64 Test&quot; --vagrantfile ~/vagrantfiles/UpdateIE
+</pre></div>
+</div>
+<p>To &#8220;save&#8221; the image, nicely shut down the VM. The image&#8217;s status will change to
+&#8220;ready&#8221; once it can be used again.</p>
+</div>
+</div>
+<div class="section" id="setting-up-an-image">
+<h2>Setting up an Image<a class="headerlink" href="#setting-up-an-image" title="Permalink to this headline">¶</a></h2>
+<p>When configuring an image, all VMs should have full network access, including to
+the host (master) machine. As part of the install process, the master should
+have been setup with an <code class="code docutils literal"><span class="pre">/install/</span></code> directory at the root of its webserver at <code class="code docutils literal"><span class="pre">http://192.168.122.1/install/</span></code>.
+The install directory should contain the <code class="code docutils literal"><span class="pre">prebootstrap.py</span></code> and setup
+instructions. This would be a good place to put any commonly required
+installers/packages, etc. (in the <code class="code docutils literal"><span class="pre">/talus/install</span></code> directory on the master server).</p>
+<a class="reference internal image-reference" href="_images/image_configure_install_host.png"><img alt="_images/image_configure_install_host.png" class="align-center" src="_images/image_configure_install_host.png" style="width: 400px;" /></a>
+<div class="section" id="drivers">
+<h3>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h3>
+<p>Images being configured will also have a CDROM mounted containing necessary
+libvirt drivers for windows (virtio, ethernet adapters, etc). Be sure to check
+device manager on windows and install drivers from the CDROM for any
+unrecognized hardware.</p>
+</div>
+<div class="section" id="prebootstrap">
+<h3>Prebootstrap<a class="headerlink" href="#prebootstrap" title="Permalink to this headline">¶</a></h3>
+<p>Download the prebootstrap.py from <a class="reference external" href="http://192.168.122.1/install/prebootstrap.py">http://192.168.122.1/install/prebootstrap.py</a>
+from inside the VM when configuring. The prebootstrap needs to be setup to run
+on startup. An easy way to do this is to place a link to the prebootstrap in the
+Startup folder.</p>
+</div>
+<div class="section" id="general-requirements">
+<h3>General Requirements<a class="headerlink" href="#general-requirements" title="Permalink to this headline">¶</a></h3>
+<p>Below is a list of other requirements that should be installed/setup in the VM</p>
+<ul class="simple">
+<li>no access control (no UAC, passwordless sudo, etc)</li>
+<li>automatic login</li>
+<li>turn off auto-updates</li>
+<li>change appearance/performance to favor performance over appearance</li>
+<li>username/password set to &#8220;user/password&#8221; (this _can_ be different, but it&#8217;s easiest to work with the default of user/password)</li>
+<li>Python 2.7 installed and added to the <code class="code docutils literal"><span class="pre">PATH</span></code> environment variable</li>
+<li>pip installed (should come installed by default with the latest versions of Python 2.7.X)</li>
+<li>run <code class="code docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">requests</span> <span class="pre">pymongo</span></code></li>
+<li>python lxml package (download the installer, don&#8217;t do this via pip)</li>
+</ul>
+</div>
+<div class="section" id="windows-requirements">
+<h3>Windows Requirements<a class="headerlink" href="#windows-requirements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>sysinternals tools added to sys.path, also with EULA having been agreed to on each exe (mainly need PsExec).</li>
+<li>pip install comtypes</li>
+<li>windbg</li>
+<li>!exploitable (msec.dll)</li>
+<li>VCRedist 2012 x86 and x64 (if applicable)</li>
+<li>WinRM setup:</li>
+</ul>
+<div class="highlight-bash"><div class="highlight"><pre>winrm quickconfig -q
+winrm <span class="nb">set </span>winrm/config/winrs @<span class="o">{</span><span class="nv">MaxMemoryPerShellMB</span><span class="o">=</span><span class="s2">&quot;512&quot;</span><span class="o">}</span>
+winrm <span class="nb">set </span>winrm/config @<span class="o">{</span><span class="nv">MaxTimeoutms</span><span class="o">=</span><span class="s2">&quot;1800000&quot;</span><span class="o">}</span>
+winrm <span class="nb">set </span>winrm/config/service @<span class="o">{</span><span class="nv">AllowUnencrypted</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="o">}</span>
+winrm <span class="nb">set </span>winrm/config/service/auth @<span class="o">{</span><span class="nv">Basic</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="o">}</span>
+sc config WinRM <span class="nv">start</span><span class="o">=</span> auto
+</pre></div>
+</div>
+<p>Also note that all created networks in the VM must be set the “Work”
+network. This can be set to be the default action by opening:</p>
+<ol class="arabic simple">
+<li>Open &#8220;gpedit.msc&#8221;</li>
+<li>Go to Computer Configration</li>
+<li>Windows Settings</li>
+<li>Security Settings</li>
+<li>Network list manager</li>
+</ol>
+<p>Set the appropriate settings to make all networks automatically be marked as a private
+(trusted) network.</p>
+</div>
+</div>
+<div class="section" id="tools-components">
+<h2>Tools &amp; Components<a class="headerlink" href="#tools-components" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="definitions">
+<h3>Definitions<a class="headerlink" href="#definitions" title="Permalink to this headline">¶</a></h3>
+<p>Talus is built around the idea that tools written to run inside of VMs should be
+highly configurable from a UI. This should prevent the user from having to
+re-configure VM images every time dependencies change, and should also keep the
+user from having to change their code every time he/she needs to tweak its
+operation.</p>
+<p>A <code class="code docutils literal"><span class="pre">Tool</span></code> is a user-defined class that is run inside the VM once all dependencies
+have been installed. The <code class="code docutils literal"><span class="pre">run</span></code> method on an instantiated tool is run
+<cite>once</cite> per vm. Tools must list and document their parameters. Tool
+parameters can be any native python type (<code class="code docutils literal"><span class="pre">str</span></code>, <code class="code docutils literal"><span class="pre">float</span></code>,
+<code class="code docutils literal"><span class="pre">int</span></code>, etc), a talus <code class="code docutils literal"><span class="pre">Component</span></code>, or a talus <code class="code docutils literal"><span class="pre">FileSet</span></code></p>
+<p>a <code class="code docutils literal"><span class="pre">Component</span></code> is a user-defined class of reusable code. These are intended
+to be used by a tool in order to perform utility functions. For example, a debugger
+could be a tool, or a web server, or a file downloader. One component could be
+written and then reused by multiple different tools. For example, a debugger
+component could be written and then used by a browser fuzzer tool, a pdb fuzzing
+tools, etc. A <code class="code docutils literal"><span class="pre">Component</span></code> must also document all parameters to its
+<code class="code docutils literal"><span class="pre">init</span></code> method, using the same format and types as are required with tool
+classes.</p>
+<p>A tool that lists a component as a parameter will be passed an instantiated
+component of the specified type.</p>
+<p>One of the major benefits of this setup is that users can use polymorphism with
+their components. Back to the debugger example, a generic IDebugger interface
+could be created that exposes certain functionality/methods. Specific debugger
+implementations could then subclass the IDebugger component to provide
+specific functionality (e.g. separate debuggers for Windows, Linux, and Mac). Tools that require
+a debugger could then set the type of their debugger parameter to an IDebugger
+component. When configuring the tool to be run, the user will then be able to
+choose which specific class to use (the windows debugger, linux, or mac
+debugger).</p>
+<p>Separating components from tools allows tools to perform actions without needing
+to know the configuration details.</p>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>The documented parameters in tools and components are parsed out of the source
+code and validated in a pre-receive hook in the talus master git repository.
+Useful error messages should be returned if invalid parameters are specified.</p>
+<p>Below is a <code class="code docutils literal"><span class="pre">TestTool</span></code> class that accepts four parameters -
+two strings, an integer, and a component:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">talus.tools</span> <span class="kn">import</span> <span class="n">Tool</span>
+
+<span class="k">class</span> <span class="nc">TestTool</span><span class="p">(</span><span class="n">Tool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is a description for the TestTool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">comp1</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run the Template tool with a few args and a component</span>
+
+<span class="sd">        :param str arg1: The first argument (a string)</span>
+<span class="sd">        :param str arg2: The second argument (a string)</span>
+<span class="sd">        :param int iters: The number of times to report progress</span>
+<span class="sd">        :param Component(ComponentTemplate) comp1: The third argument (an instantiated Template component)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+            <span class="n">comp1</span><span class="o">.</span><span class="n">do_sometheing</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice how the parameters are documented within the docstring. These parameters
+are directly used to configure the Tool before it is run inside the VMs. Below
+is an example of configuring the test tool above using the <a class="reference external" href="https://github.com/e/talus_client">talus_client</a>:</p>
+<div class="highlight-bash"><div class="highlight"><pre>talus:job:create&gt; <span class="nb">set </span>params
+
+Editing params
+
+talus:job:create:params&gt; show
+name    <span class="nb">type               </span>value                                         description
+------  -----------------  --------------------------------------------  -------------------------------------------------------
+arg1    str                None                                          The first argument <span class="o">(</span>a string<span class="o">)</span>
+arg2    str                None                                          The second argument <span class="o">(</span>a string<span class="o">)</span>
+iters   int                None                                          The number of <span class="nb">times </span>to report progress
+comp1   ComponentTemplate  <span class="o">(</span>ComponentTemplate<span class="o">)</span> <span class="o">{</span>u<span class="s1">&#39;prefix&#39;</span>: None<span class="o">}</span>         The third argument <span class="o">(</span>an instantiated Template component<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="git-repo">
+<h3>Git Repo<a class="headerlink" href="#git-repo" title="Permalink to this headline">¶</a></h3>
+<p>All tools and components that are to be run through talus must exist in the git
+repository found on the talus master server. Users can clone the git repository
+like so:</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone git+ssh://USER@TALUS_MASTER/talus/talus_code.git
+</pre></div>
+</div>
+<p><code class="code docutils literal"><span class="pre">USER</span></code> should be your username on the talus master server. Users need to be a member of
+the <code class="code docutils literal"><span class="pre">talus</span></code> group in order to clone the code repository.</p>
+</div>
+<div class="section" id="creating-new-code">
+<h3>Creating New Code<a class="headerlink" href="#creating-new-code" title="Permalink to this headline">¶</a></h3>
+<p>Code can manually be manually created by creating a new tool/component folder in the
+<code class="code docutils literal"><span class="pre">talus/tools</span></code> or <code class="code docutils literal"><span class="pre">talus/components</span></code> folder. The name of the tool&#8217;s
+directory must be the underscore-cased equivalent of the pascal-cased class name
+(confusing, I know). For example, the <code class="code docutils literal"><span class="pre">TestTool</span></code> class must exist in an
+<code class="code docutils literal"><span class="pre">__init__.py</span></code> file in the <code class="code docutils literal"><span class="pre">talus/tools/test_tool/</span></code> directory.</p>
+<p>This can also be performed through the <a class="reference external" href="https://github.com/e/talus_client">talus_client</a> using the <code class="code docutils literal"><span class="pre">code</span> <span class="pre">create</span></code> comamnd:</p>
+<div class="highlight-bash"><div class="highlight"><pre>create   -   Create new code in the repository. This will create
+              the code in the talus repository, as well as in the
+              database.
+
+
+              code create NAME -t or -c
+
+                   -t,--tool    Create a tool
+              -c,--component    Create a component
+</pre></div>
+</div>
+<p>The example below will cause a new tool name <code class="code docutils literal"><span class="pre">DemoTool</span></code> to be created in the git repository:</p>
+<div class="highlight-bash"><div class="highlight"><pre>talus code create -t DemoTool
+</pre></div>
+</div>
+<p>After running the above command, users should see their newly-created tool when
+they pull remote changes to the git repository:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus code create -t DemoTool
+<span class="o">[</span>.<span class="o">]</span>  git pull to see your new tool
+<span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: <span class="nb">cd</span> /tmp/talus_code/
+<span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_code <span class="o">]</span>: git pull
+remote: Counting objects: 10, <span class="k">done</span>.
+remote: Compressing objects: 100% <span class="o">(</span>7/7<span class="o">)</span>, <span class="k">done</span>.
+remote: Total <span class="m">7</span> <span class="o">(</span>delta 3<span class="o">)</span>, reused <span class="m">0</span> <span class="o">(</span>delta 0<span class="o">)</span>
+Unpacking objects: 100% <span class="o">(</span>7/7<span class="o">)</span>, <span class="k">done</span>.
+From git+ssh://master.talus/talus/talus_code
+   300d128..a8c01ee  master     -&gt; origin/master
+Updating 300d128..a8c01ee
+Fast-forward
+ talus/tools/demo_tool/__init__.py      <span class="p">|</span> <span class="m">61</span> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ talus/tools/demo_tool/requirements.txt <span class="p">|</span>  <span class="m">1</span> +
+ talus/tools/demo_tool/run_local.py     <span class="p">|</span> <span class="m">14</span> ++++++++++++++
+ <span class="m">3</span> files changed, <span class="m">76</span> insertions<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> talus/tools/demo_tool/__init__.py
+ create mode <span class="m">100644</span> talus/tools/demo_tool/requirements.txt
+ create mode <span class="m">100644</span> talus/tools/demo_tool/run_local.py
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="creating-a-task">
+<h2>Creating a Task<a class="headerlink" href="#creating-a-task" title="Permalink to this headline">¶</a></h2>
+<p>Tasks can be thought of as templates that contain default settings for running a tool. Tasks
+are created through the talus client either interactively, or through command-line parameters:</p>
+<div class="highlight-bash"><div class="highlight"><pre>create   -   Create a new task in Talus
+
+             create -n NAME -t TOOL_ID_OR_NAME -p PARAMS -l LIMIT
+
+                     -n,--name    The name of the new task <span class="o">(</span>required, no default<span class="o">)</span>
+                     -t,--tool    The name or id of the tool to be run by the task <span class="o">(</span>required, no default<span class="o">)</span>
+                    -l,--limit    The limit <span class="k">for</span> the task. What the limit means is defined by how the tool
+                                  reports progress. If the tool does not report progress, <span class="k">then</span> the limit
+                                  means the number of total VMs to run.
+                      --vm-max    Maximum amount of <span class="nb">time </span>a vm should be allowed to run <span class="o">(</span>defaults to 30m<span class="o">)</span>
+                                  You may use values such as 30m15s. If no units are used, the value is
+                                  assumed to be in seconds.
+                   -p,--params    The params of the task
+                       --shell    Create the task in an interactive shell <span class="o">(</span>default <span class="k">if</span> already in shell and no args<span class="o">)</span>
+                  -v,--version    The version the task should be pinned at, <span class="k">else</span> the current HEAD <span class="o">(</span><span class="nv">default</span><span class="o">=</span>None<span class="o">)</span>
+              -f,--params-file    The file that contains the params of the task
+</pre></div>
+</div>
+<p>To create a new task that uses the tool &#8220;BrowserFuzzer&#8221;:</p>
+<p>To create a new task that also uses the &#8220;BrowserFuzzer&#8221; tool but reads in the params
+from a file and has a max vm runtime of 45 minutes 10 seconds:</p>
+<div class="highlight-bash"><div class="highlight"><pre>task create -n <span class="s2">&quot;IE Fuzzer&quot;</span> -t <span class="s2">&quot;BrowserFuzzer&quot;</span> -f ie_fuzz_params.json --vm-max 45m10s
+</pre></div>
+</div>
+<p>Note that using command-line options to set the default paramters for tools and
+components is very unwieldy and extremely tedious. It is HIGHLY recommended that
+you use the interactive mode to create tasks instead:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(venv)zorniger [ talus_code ]: talus
+ttalus&gt; task
+talus:task&gt; create
+talus:task:create&gt; show
+name        value       description
+----------  ----------  --------------------------------------------------------------------
+version     None        The version of code the task should run on (leave blank for default)
+params      {}          The parameters for the tool
+name                    The name of the task
+tags        [u&#39;james&#39;]  Tags associated with this task
+timestamps  {}          Timestamps (don&#39;t mess with this)
+tool        None        The tool the task should run
+limit       1           Limit for the task (when does it finish?)
+image       None        The default image for this task
+vm_max      1800        Max vm duration (s) before being forcefully terminated
+network     whitelist   The network whitelist (E.g. &#39;whitelist:DOMAIN_1,IP_2,DOMAIN_3,...&#39;)
+talus:task:create&gt; set name &quot;the name of the task&quot;
+</pre></div>
+</div>
+<p>Tasks can be listed using the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">task</span> <span class="pre">list</span></code> command.</p>
+</div>
+<div class="section" id="creating-and-running-a-job">
+<h2>Creating and Running a Job<a class="headerlink" href="#creating-and-running-a-job" title="Permalink to this headline">¶</a></h2>
+<p>Jobs are instances of a task that have been run. Job parameters should never be
+edited, as they preserve the state that the job was run under (to help with
+reproducibility, etc.)</p>
+<p>Creating a job is nearly identical to creating a task, and can be done through
+both the command-line and interactive modes. If no changes to the default
+task settings need to be made, all that must be provided to run a job is the
+task name or id.</p>
+<p>An optional <code class="code docutils literal"><span class="pre">--debug</span></code> flag exists when creating a job. This will cause the
+master daemon to spin up at most <code class="code docutils literal"><span class="pre">--limit</span></code> VMs, and will also cause all
+messages logged in the tool via <code class="code docutils literal"><span class="pre">self.log.{debug,info,error,warn,etc}</span></code> to
+be saved to the database.</p>
+<div class="section" id="limit-and-progress">
+<h3>Limit and Progress<a class="headerlink" href="#limit-and-progress" title="Permalink to this headline">¶</a></h3>
+<p>The limit attribute on a job determines when a job will be finished. The limit
+can be any positive integer or -1. A value of -1 means that the job will run
+forever until the user cancels the job.</p>
+<p>By default, if a successfully run tool did not explicitly increment the job&#8217;s
+progress via <code class="code docutils literal"><span class="pre">self.progress()</span></code>, the job&#8217;s overall progress is
+automatically incremented by 1. For example, tools may choose to increment the job&#8217;s progress for
+every 100 iterations of a fuzzer by doing something similar to:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perform_iteration</span><span class="p">()</span>
+    <span class="c"># report any unreported iterations</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will allow the user to treat the <code class="code docutils literal"><span class="pre">--limit</span></code> of the job as total number
+of iterations required. Talus will continue to spin up as many VMs as possible (according
+the job&#8217;s priority) until the limit has been reached.</p>
+</div>
+<div class="section" id="priorities">
+<h3>Priorities<a class="headerlink" href="#priorities" title="Permalink to this headline">¶</a></h3>
+<p>A job may also have a priority. Priority values can be anything between 0 and
+100. The master daemon maintains a priority queue that it uses to add batches of
+job parts into the jobs queue when the queue is empty. This allows one job to
+preempt other lower-piority jobs. This also allows users to start never-ending
+jobs that can run with an extremely low priority.</p>
+</div>
+</div>
+<div class="section" id="job-status-info">
+<h2>Job Status/Info<a class="headerlink" href="#job-status-info" title="Permalink to this headline">¶</a></h2>
+<p>A job&#8217;s status, current speed (how many progress increments/time), overall
+progress, and details of currently-running VMs for that job can be viewed using
+the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">job</span> <span class="pre">info</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre>info   -   List detailed information about the job.
+
+           Git-like syntax can also be used here to refer to the most recently created
+           job. E.g. the <span class="nb">command </span>below will show info about the 2nd most recent job:
+
+               job info +2
+
+           Search information can also be used. If git-like syntax is omitted, only
+           the first entry returned from the database will be displayed.
+
+               job info --all --status running --sort -priority +2
+
+           The example above will show information about 2nd highest priority job whose
+           status is running. Omitting --all will cause the search to be performed only
+           among _your_ jobs.
+</pre></div>
+</div>
+<p>Below is an example of output from the job info command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus job info +1
+<span class="o">[</span>+<span class="o">]</span>  default filtering by username <span class="o">(</span>searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> james<span class="o">)</span>
+<span class="o">[</span>+<span class="o">]</span>  use --all to view all models
+
+         ID: 5633c7808fa3e20018c34afc
+       Name: test_task 2015-10-30 14:39:44.111238
+     Status: running
+       Tags: <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;&#39;</span><span class="o">]</span>
+    Started: seconds ago <span class="o">(</span>2015-10-30 14:39:44<span class="o">)</span>
+      Ended:
+      Debug: False
+      Speed: 0.0/s, 0.0/min, 0.0/hour, 0.0/day
+   Progress: 0.0% <span class="o">(</span><span class="m">0</span> / 20<span class="o">)</span>
+       Task: crash_test_task <span class="o">(</span>560eaf0f39489200081ff19a<span class="o">)</span>
+   Priority: 50
+     Params: <span class="o">{</span><span class="s2">&quot;iters&quot;</span>: 3, <span class="s2">&quot;arg1&quot;</span>: <span class="s2">&quot;yoyoyo&quot;</span>, <span class="s2">&quot;arg2&quot;</span>: <span class="s2">&quot;yoyoyoyoyoy&quot;</span>, <span class="s2">&quot;comp1&quot;</span>: <span class="o">{</span><span class="s2">&quot;params&quot;</span>: <span class="o">{</span><span class="s2">&quot;prefix&quot;</span>: <span class="s2">&quot;blahblah&quot;</span><span class="o">}</span>, <span class="s2">&quot;class&quot;</span>: <span class="s2">&quot;ComponentTemplate&quot;</span><span class="o">}}</span>
+    Network: whitelist
+      Image: win7 <span class="o">(</span>563d827413a25300090faa02<span class="o">)</span>
+     VM Max: 1800
+Running VMS:
+
+slave           vnc port  running since      job idx  status        <span class="p">|</span>  slave           vnc port  running since      job idx  status
+------------  ----------  ---------------  ---------  ------------  <span class="p">|</span>  ------------  ----------  ---------------  ---------  --------
+slave.talus2        <span class="m">5948</span>  seconds ago              <span class="m">1</span>  running tool  <span class="p">|</span>  master.talus        <span class="m">5919</span>  seconds ago              <span class="m">2</span>  booting
+slave.talus2        <span class="m">5949</span>  seconds ago              <span class="m">3</span>  running tool  <span class="p">|</span>  master.talus        <span class="m">5915</span>  seconds ago              <span class="m">6</span>  booting
+slave.talus2        <span class="m">5912</span>  seconds ago              <span class="m">5</span>  running tool  <span class="p">|</span>  master.talus        <span class="m">5907</span>  seconds ago             <span class="m">11</span>  booting
+slave.talus2        <span class="m">5901</span>  seconds ago             <span class="m">10</span>  running tool  <span class="p">|</span>  master.talus        <span class="m">5900</span>  seconds ago             <span class="m">14</span>  booting
+slave.talus2        <span class="m">5902</span>  seconds ago             <span class="m">13</span>  running tool  <span class="p">|</span>  master.talus        <span class="m">5910</span>  seconds ago             <span class="m">15</span>  booting
+slave.talus2        <span class="m">5913</span>  seconds ago             <span class="m">19</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5940</span>  seconds ago             <span class="m">24</span>  booting
+slave.talus2        <span class="m">5903</span>  seconds ago             <span class="m">21</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5939</span>  seconds ago             <span class="m">30</span>  booting
+slave.talus2        <span class="m">5909</span>  seconds ago             <span class="m">23</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5930</span>  seconds ago             <span class="m">36</span>  booting
+slave.talus3        <span class="m">5910</span>  seconds ago             <span class="m">26</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5941</span>  seconds ago             <span class="m">40</span>  booting
+slave.talus3        <span class="m">5917</span>  seconds ago             <span class="m">27</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5938</span>  seconds ago             <span class="m">41</span>  booting
+slave.talus3        <span class="m">5918</span>  seconds ago             <span class="m">29</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5926</span>  seconds ago             <span class="m">59</span>  booting
+slave.talus3        <span class="m">5907</span>  seconds ago             <span class="m">32</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5924</span>  seconds ago             <span class="m">69</span>  booting
+slave.talus3        <span class="m">5919</span>  seconds ago             <span class="m">35</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5922</span>  seconds ago             <span class="m">70</span>  booting
+slave.talus3        <span class="m">5920</span>  seconds ago             <span class="m">39</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5925</span>  seconds ago             <span class="m">72</span>  booting
+slave.talus3        <span class="m">5906</span>  seconds ago             <span class="m">46</span>  running tool  <span class="p">|</span>  slave.talus1        <span class="m">5933</span>  seconds ago             <span class="m">73</span>  booting
+slave.talus3        <span class="m">5905</span>  seconds ago             <span class="m">48</span>  running tool  <span class="p">|</span>  slave.talus2        <span class="m">5929</span>  seconds ago             <span class="m">75</span>  booting
+slave.talus3        <span class="m">5914</span>  seconds ago             <span class="m">49</span>  booting       <span class="p">|</span>  slave.talus2        <span class="m">5942</span>  seconds ago             <span class="m">76</span>  booting
+slave.talus3        <span class="m">5911</span>  seconds ago             <span class="m">52</span>  running tool  <span class="p">|</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="adding">
+<h3>Adding<a class="headerlink" href="#adding" title="Permalink to this headline">¶</a></h3>
+<p>Results are added from a tool by using the <code class="code docutils literal"><span class="pre">self.result(TYPE,</span> <span class="pre">DATA)</span></code> method. This cause the result of type
+<cite>TYPE</cite> to be added to the database. Information about the job, tool, timestamps, etc will be automatically
+added to the result in the database.</p>
+<p>For example, to save data about a crash, you would set the type to <code class="code docutils literal"><span class="pre">&quot;crash&quot;</span></code>, and add the crash information
+as the data parameter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CrashTestTool</span><span class="p">(</span><span class="n">Tool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_file</span><span class="p">(</span>
+        <span class="s">&quot;REPRO DATA&quot;</span><span class="p">,</span>
+        <span class="n">content_type</span><span class="o">=</span><span class="s">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s">&quot;this_was_the_filename.json&quot;</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="s">&quot;crash&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s">&quot;registers&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&quot;eip&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+            <span class="s">&quot;eax&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+            <span class="s">&quot;ecx&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+            <span class="s">&quot;edx&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+            <span class="s">&quot;ebx&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+            <span class="s">&quot;esp&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0xffffffff</span><span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s">&quot;backtrace&quot;</span><span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">&quot;disassembly&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s">&quot;0000fff0 int 3&quot;</span><span class="p">,</span>
+            <span class="s">&quot;0000fff1 int 3&quot;</span><span class="p">,</span>
+            <span class="s">&quot;0000fff2 int 3&quot;</span><span class="p">,</span>
+            <span class="s">&quot;--&gt; 0000fff3 {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s">&quot;jmp eax&quot;</span><span class="p">,</span> <span class="s">&quot;mov eax,[ecx+12]&quot;</span><span class="p">,</span> <span class="s">&quot;ret&quot;</span><span class="p">,</span> <span class="s">&quot;call [ebx]&quot;</span><span class="p">,</span> <span class="s">&quot;lea ecx,[eax+1080]&quot;</span><span class="p">])),</span>
+            <span class="s">&quot;0000fff4 ret&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s">&quot;hash_major&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s">&quot;bucket1&quot;</span><span class="p">,</span> <span class="s">&quot;bucket2&quot;</span><span class="p">,</span> <span class="s">&quot;bucket3&quot;</span><span class="p">]),</span>
+        <span class="s">&quot;hash_minor&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s">&quot;minor_bucket1&quot;</span><span class="p">,</span> <span class="s">&quot;minor_bucket2&quot;</span><span class="p">,</span> <span class="s">&quot;minor_bucket3&quot;</span><span class="p">]),</span>
+        <span class="s">&quot;exploitability&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s">&quot;EXPLOITABLE&quot;</span><span class="p">,</span> <span class="s">&quot;NOTEXPLOITABLE&quot;</span><span class="p">,</span> <span class="s">&quot;UNLIKELY&quot;</span><span class="p">]),</span>
+        <span class="c"># a list of files for reproducing the bug</span>
+        <span class="s">&quot;repro&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">file_id</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="listing">
+<h3>Listing<a class="headerlink" href="#listing" title="Permalink to this headline">¶</a></h3>
+<p>Results can be listed using the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">result</span> <span class="pre">list</span></code> command. Standard search
+queries can be used, as with all other search methods:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus result list --job 563117bd9392d70008b30324 --num <span class="m">10</span> --tags result_test
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">job</span> <span class="o">=</span> 563117bd9392d70008b30324
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">num</span> <span class="o">=</span> 10
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> result_test
+<span class="o">[</span>+<span class="o">]</span>  default filtering by username <span class="o">(</span>searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> james<span class="o">)</span>
+<span class="o">[</span>+<span class="o">]</span>  use --all to view all models
+id                        tags                        <span class="nb">type    </span>tool           created                     job                       data
+------------------------  --------------------------  ------  -------------  --------------------------  ------------------------  ----------------------------------------
+563118cfd8fb8d38907eec7e  <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;result_test&#39;</span><span class="o">]</span>  crash   CrashTestTool  2015-10-28T12:49:51.740000  563117bd9392d70008b30324  <span class="o">{</span>u<span class="s1">&#39;backtrace&#39;</span>: <span class="o">[]</span>, u<span class="s1">&#39;repro&#39;</span>: <span class="o">[</span>u<span class="s1">&#39;56317b33</span>
+<span class="s1">563118c6d8fb8d38907eec75  [u&#39;</span>james<span class="s1">&#39;, u&#39;</span>result_test<span class="s1">&#39;]  crash   CrashTestTool  2015-10-28T12:49:42.759000  563117bd9392d70008b30324  {u&#39;</span>backtrace<span class="s1">&#39;: [], u&#39;</span>repro<span class="s1">&#39;: [u&#39;</span>56317b30
+563118c6d8fb8d38907eec74  <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;result_test&#39;</span><span class="o">]</span>  crash   CrashTestTool  2015-10-28T12:49:42.478000  563117bd9392d70008b30324  <span class="o">{</span>u<span class="s1">&#39;backtrace&#39;</span>: <span class="o">[]</span>, u<span class="s1">&#39;repro&#39;</span>: <span class="o">[</span>u<span class="s1">&#39;56317b2b</span>
+<span class="s1">563118c0d8fb8d38907eec6d  [u&#39;</span>james<span class="s1">&#39;, u&#39;</span>result_test<span class="s1">&#39;]  crash   CrashTestTool  2015-10-28T12:49:36.671000  563117bd9392d70008b30324  {u&#39;</span>backtrace<span class="s1">&#39;: [], u&#39;</span>repro<span class="s1">&#39;: [u&#39;</span>56317b26
+563118bdd8fb8d38907eec69  <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;result_test&#39;</span><span class="o">]</span>  crash   CrashTestTool  2015-10-28T12:49:33.002000  563117bd9392d70008b30324  <span class="o">{</span>u<span class="s1">&#39;backtrace&#39;</span>: <span class="o">[]</span>, u<span class="s1">&#39;repro&#39;</span>: <span class="o">[</span>u<span class="s1">&#39;56317b29</span>
+<span class="s1">563118b6d8fb8d38907eec62  [u&#39;</span>james<span class="s1">&#39;, u&#39;</span>result_test<span class="s1">&#39;]  crash   CrashTestTool  2015-10-28T12:49:26.817000  563117bd9392d70008b30324  {u&#39;</span>backtrace<span class="s1">&#39;: [], u&#39;</span>repro<span class="s1">&#39;: [u&#39;</span>56317b20
+563118b0d8fb8d38907eec5c  <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;result_test&#39;</span><span class="o">]</span>  crash   CrashTestTool  2015-10-28T12:49:20.540000  563117bd9392d70008b30324  <span class="o">{</span>u<span class="s1">&#39;backtrace&#39;</span>: <span class="o">[]</span>, u<span class="s1">&#39;repro&#39;</span>: <span class="o">[</span>u<span class="s1">&#39;56317b1c</span>
+<span class="s1">563118afd8fb8d38907eec59  [u&#39;</span>james<span class="s1">&#39;, u&#39;</span>result_test<span class="s1">&#39;]  crash   CrashTestTool  2015-10-28T12:49:19.486000  563117bd9392d70008b30324  {u&#39;</span>backtrace<span class="s1">&#39;: [], u&#39;</span>repro<span class="s1">&#39;: [u&#39;</span>56317b1a
+563118acd8fb8d38907eec55  <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;result_test&#39;</span><span class="o">]</span>  crash   CrashTestTool  2015-10-28T12:49:16.318000  563117bd9392d70008b30324  <span class="o">{</span>u<span class="s1">&#39;backtrace&#39;</span>: <span class="o">[]</span>, u<span class="s1">&#39;repro&#39;</span>: <span class="o">[</span>u<span class="s1">&#39;56317b17</span>
+<span class="s1">563118aad8fb8d38907eec52  [u&#39;</span>james<span class="s1">&#39;, u&#39;</span>result_test<span class="s1">&#39;]  crash   CrashTestTool  2015-10-28T12:49:14.802000  563117bd9392d70008b30324  {u&#39;</span>backtrace<span class="s1">&#39;: [], u&#39;</span>repro<span class="s1">&#39;: [u&#39;</span>56317b16
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="crashes">
+<h2>Crashes<a class="headerlink" href="#crashes" title="Permalink to this headline">¶</a></h2>
+<p>A crash-specific result-type command can be used to view crashes, crash details, and export crash
+data.</p>
+<div class="section" id="id3">
+<h3>Listing<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Listing crashes is performed with the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">crash</span> <span class="pre">list</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre>list   -   List crashes in talus. Fields to be searched <span class="k">for</span>
+           must be turned into parameter format <span class="o">(</span>E.g.
+           <span class="sb">``</span>--search-item <span class="s2">&quot;some value&quot;</span><span class="sb">``</span> format would search
+
+           <span class="k">for</span> a result with the field <span class="sb">``</span>search_item<span class="sb">``</span> equaling <span class="sb">``</span>some value<span class="sb">``</span><span class="o">)</span>.
+
+           Examples:
+               crash list --search-item <span class="s2">&quot;search value&quot;</span> <span class="o">[</span>--search-item2 <span class="s2">&quot;search value2&quot;</span> ...<span class="o">]</span>
+               crash list --registers.eip 0x41414141
+               crash list --all --tags browser_fuzzing
+               crash list --exploitability EXPLOITABLE
+               crash list --<span class="se">\$</span>where <span class="s2">&quot;(this.data.registers.eax + 0x59816867) == this.data.registers.eip&quot;</span>
+</pre></div>
+</div>
+<p>Below is a simple example of using the <code class="code docutils literal"><span class="pre">crash</span> <span class="pre">list</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus crash list --tags result_test --num 10
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> result_test
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">num</span> <span class="o">=</span> 10
+<span class="o">[</span>+<span class="o">]</span>  default filtering by username <span class="o">(</span>searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> james<span class="o">)</span>
+<span class="o">[</span>+<span class="o">]</span>  use --all to view all models
+id                        tool           created     exploitability    <span class="nb">hash                   </span>instr               registers
+------------------------  -------------  ----------  ----------------  ---------------------  ------------------  -------------------------
+563118cfd8fb8d38907eec7e  CrashTestTool  <span class="m">2</span> days ago  EXPLOITABLE       bucket3:minor_bucket3  ret
+563118c6d8fb8d38907eec75  CrashTestTool  <span class="m">2</span> days ago  EXPLOITABLE       bucket2:minor_bucket1  call <span class="o">[</span>ebx<span class="o">]</span>          ebx:227faccc
+563118c6d8fb8d38907eec74  CrashTestTool  <span class="m">2</span> days ago  UNLIKELY          bucket2:minor_bucket2  lea ecx,<span class="o">[</span>eax+1080<span class="o">]</span>  eax:4a358661 ecx:24f6c0d8
+563118c0d8fb8d38907eec6d  CrashTestTool  <span class="m">2</span> days ago  EXPLOITABLE       bucket2:minor_bucket1  jmp eax             eax:a5a76cb6
+563118bdd8fb8d38907eec69  CrashTestTool  <span class="m">2</span> days ago  NOTEXPLOITABLE    bucket3:minor_bucket3  ret
+563118b6d8fb8d38907eec62  CrashTestTool  <span class="m">2</span> days ago  NOTEXPLOITABLE    bucket1:minor_bucket2  mov eax,<span class="o">[</span>ecx+12<span class="o">]</span>    eax:ba014e3e ecx:607ce892
+563118b0d8fb8d38907eec5c  CrashTestTool  <span class="m">2</span> days ago  NOTEXPLOITABLE    bucket3:minor_bucket3  call <span class="o">[</span>ebx<span class="o">]</span>          ebx:b32b4d80
+563118afd8fb8d38907eec59  CrashTestTool  <span class="m">2</span> days ago  UNLIKELY          bucket2:minor_bucket1  mov eax,<span class="o">[</span>ecx+12<span class="o">]</span>    eax:a7bf6d02 ecx:a963a5f7
+563118acd8fb8d38907eec55  CrashTestTool  <span class="m">2</span> days ago  NOTEXPLOITABLE    bucket2:minor_bucket1  jmp eax             eax:e8a66627
+563118aad8fb8d38907eec52  CrashTestTool  <span class="m">2</span> days ago  NOTEXPLOITABLE    bucket2:minor_bucket3  call <span class="o">[</span>ebx<span class="o">]</span>          ebx:56cf65d3
+</pre></div>
+</div>
+</div>
+<div class="section" id="info">
+<h3>Info<a class="headerlink" href="#info" title="Permalink to this headline">¶</a></h3>
+<p>Crash info can be dumped using the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">crash</span> <span class="pre">info</span></code> command. If you want to see <em>all</em> details
+of a crash, add the <code class="code docutils literal"><span class="pre">--details</span></code> flag:</p>
+<div class="highlight-bash"><div class="highlight"><pre>info   -   List detailed information about the crash.
+
+           Git-like syntax can also be used here to refer to the most recently created
+           crash result. E.g. the <span class="nb">command </span>below will show info about the 2nd most recent crash:
+
+               crash info +2
+
+           Search information can also be used. If git-like syntax is omitted, only
+           the first entry returned from the database will be displayed.
+
+               crash info --all --registers.eip 0x41414141 --sort registers.eax +1
+
+           The example above will show information about the crash with the lowest eax value
+           <span class="o">(</span>+2 would show the 2nd lowest<span class="o">)</span> that has an eip 0f 0x41414141.  Omitting --all will
+           cause the search to be performed only among _your_ crashes.
+
+           To view _all_ of the details about a crash, add the --details flag.
+</pre></div>
+</div>
+<p>Below is the output of a real example of viewing crash info:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus crash info --tags result_test +2
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> result_test
+<span class="o">[</span>+<span class="o">]</span>  default filtering by username <span class="o">(</span>searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> james<span class="o">)</span>
+<span class="o">[</span>+<span class="o">]</span>  use --all to view all models
+
+              ID: 563118c6d8fb8d38907eec75
+             Job: james_test_test9 <span class="o">(</span>563117bd9392d70008b30324<span class="o">)</span>
+  Exploitability: EXPLOITABLE
+Hash Major/Minor: bucket2 minor_bucket1
+     Crash Instr: call <span class="o">[</span>ebx<span class="o">]</span>
+    Crash Module:
+  Exception Code:        0
+
+          -------------------  <span class="p">|</span>  ---  --------  <span class="p">|</span>  ---  --------
+          0000fff0 int <span class="m">3</span>       <span class="p">|</span>  eip  e05576cf  <span class="p">|</span>  edx  c77df43e
+          0000fff1 int <span class="m">3</span>       <span class="p">|</span>  esp  7ad6c630  <span class="p">|</span>  ebx  227faccc
+          0000fff2 int <span class="m">3</span>       <span class="p">|</span>  eax  d9535dd8  <span class="p">|</span>  ecx  e5dc9909
+          0000fff3 call <span class="o">[</span>ebx<span class="o">]</span>  <span class="p">|</span>  ---  --------  <span class="p">|</span>  ---  --------
+          0000fff4 ret
+          -------------------
+</pre></div>
+</div>
+</div>
+<div class="section" id="exporting">
+<h3>Exporting<a class="headerlink" href="#exporting" title="Permalink to this headline">¶</a></h3>
+<p>Crashes can be exported as well. Standard search-syntax can be used to choose which crash
+to export. An optional <code class="code docutils literal"><span class="pre">--dest</span></code> parameter can be used to specify an output directory
+that the crash should be saved into:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export</span>   -   Export crash information to the target directory.
+             Crashes are identified usinggit-like syntax, ids,
+             and/or search queries, as with the info commands:
+
+
+                 crash <span class="nb">export</span> --tags IE +2
+
+             The above <span class="nb">command </span>will <span class="nb">export </span>the 2nd most recent crash <span class="o">(</span>+2<span class="o">)</span> that belongs to you and
+             contains the tag <span class="s2">&quot;IE&quot;</span>.
+
+             By default crashes will be saved into the current working directory. Use the --dest
+             argument to specify a different output directory:
+
+                 crash <span class="nb">export</span> +1 --all --tags adobe --dest adobe_crashes
+
+             The more complicated example below will search among all crashes <span class="o">(</span>--all, vs only
+             those tagged with your username<span class="o">)</span> <span class="k">for</span> ones that have an exploitability category of
+             EXPLOITABLE and crashing module of libxml. The second crash <span class="o">(</span>+2<span class="o">)</span> will be chosen
+             after sorting by data.registers.eax
+
+                 crash <span class="nb">export</span> --all --exploitability EXPLOITABLE --crashing_module libxml --sort data.registers.eax +2
+</pre></div>
+</div>
+<p>A real example (with output) of the export command is shown below:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus crash <span class="nb">export</span> --tags result_test +2 --dest /tmp/crashes
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> result_test
+<span class="o">[</span>+<span class="o">]</span>  searching <span class="k">for</span> <span class="nv">dest</span> <span class="o">=</span> /tmp/crashes
+<span class="o">[</span>+<span class="o">]</span>  default filtering by username <span class="o">(</span>searching <span class="k">for</span> <span class="nv">tags</span> <span class="o">=</span> james<span class="o">)</span>
+<span class="o">[</span>+<span class="o">]</span>  use --all to view all models
+<span class="o">[</span>.<span class="o">]</span>  exporting crash 563118c6d8fb8d38907eec75 from job james_test_test9 <span class="o">(</span>563117bd9392d70008b30324<span class="o">)</span>
+<span class="o">[</span>.<span class="o">]</span>  saving to /tmp/crashes/ultimate_hood_563118c6d8fb8d38907eec75
+<span class="o">[</span>+<span class="o">]</span>  /tmp/crashes/ultimate_hood_563118c6d8fb8d38907eec75/crash.json
+<span class="o">[</span>+<span class="o">]</span>  /tmp/crashes/ultimate_hood_563118c6d8fb8d38907eec75/crash.txt
+<span class="o">[</span>+<span class="o">]</span>  /tmp/crashes/ultimate_hood_563118c6d8fb8d38907eec75/repro/this_was_the_filename.json
+<span class="o">[</span>.<span class="o">]</span>  <span class="k">done</span> exporting crash
+</pre></div>
+</div>
+<p>Notice how the crash folder takes the form <code class="code docutils literal"><span class="pre">ADJECTIVE_NOUN_ID</span></code>. This is done to make remembering
+individual crashes easier. Long numbers aren&#8217;t something we are inherently good at remembering or
+differentiating.</p>
+</div>
+</div>
+<div class="section" id="slave-status-info">
+<h2>Slave Status/Info<a class="headerlink" href="#slave-status-info" title="Permalink to this headline">¶</a></h2>
+<p>Status of all active slaves can be listed using the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">slave</span> <span class="pre">list</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus slave list
+id                        hostname      ip              max_vms    running_vms
+------------------------  ------------  --------------  ---------  -------------
+56326a6bd2fb8d2234aeaab5  master.talus   1.1.1.2          <span class="m">5</span>              0
+56326ccad2fb8d2234aeaab1  slave1.talus   1.1.1.3         <span class="m">10</span>              0
+56326a12d2fb8d2234aeaab2  slave2.talus   1.1.1.4         <span class="m">10</span>              0
+56326a12d2fb8d2234aeaac3  slave3.talus   1.1.1.5         <span class="m">10</span>              0
+</pre></div>
+</div>
+<p>Individual information about a slave can be viewed using the <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">slave</span> <span class="pre">info</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus slave info slave2.talus
+
+         ID: 56326a12d2fb8d2234aeaab2
+       UUID: bf6a8a96-4c9c-45d5-6788-149c85363122
+   Hostname: slave2.talus
+    IP Addr: 1.1.1.4
+   Jobs Run: 67
+    Max VMs: 10
+Running VMs: 10
+
+    tool        vnc  running since    job                         job idx
+    --------  -----  ---------------  ------------------------  ---------
+    TestTool   <span class="m">5910</span>  seconds ago      5633c7808fa3e20018c34afc          7
+    TestTool   <span class="m">5906</span>  seconds ago      5633c7808fa3e20018c34afc         10
+    TestTool   <span class="m">5907</span>  seconds ago      5633c7808fa3e20018c34afc         13
+    TestTool   <span class="m">5917</span>  seconds ago      5633c7808fa3e20018c34afc         15
+    TestTool   <span class="m">5921</span>  seconds ago      5633c7808fa3e20018c34afc         16
+    TestTool   <span class="m">5902</span>  seconds ago      5633c7808fa3e20018c34afc         17
+    TestTool   <span class="m">5927</span>  seconds ago      5633c7808fa3e20018c34afc         19
+    TestTool   <span class="m">5931</span>  seconds ago      5633c7808fa3e20018c34afc         21
+    TestTool   <span class="m">5929</span>  seconds ago      5633c7808fa3e20018c34afc         31
+    TestTool   <span class="m">5928</span>  seconds ago      5633c7808fa3e20018c34afc         34
+</pre></div>
+</div>
+</div>
+<div class="section" id="master-status-info">
+<h2>Master Status/Info<a class="headerlink" href="#master-status-info" title="Permalink to this headline">¶</a></h2>
+<p>Overall information about talus and the master daemon can be viewed with the
+command <code class="code docutils literal"><span class="pre">talus</span> <span class="pre">master</span> <span class="pre">info</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>venv<span class="o">)</span>zorniger <span class="o">[</span> talus_client <span class="o">]</span>: talus master info
+
+hostname: master.talus
+      ip: 1.1.1.2
+     vms: None
+  queues:
+          <span class="nb">jobs</span>
+<span class="nb">                </span>priority  job name                              job id                    prog/limit    tags
+              ----------  ------------------------------------  ------------------------  ------------  ---------------
+                      <span class="m">50</span>  test_task 2015-10-30 14:39:44.111238  5633c7808fa3e20018c34afc  <span class="m">0</span> / <span class="m">20</span>        <span class="o">[</span>u<span class="s1">&#39;james&#39;</span>, u<span class="s1">&#39;&#39;</span><span class="o">]</span>
+</pre></div>
+</div>
+<p>The master info command will show all VMs that are currently running as part of
+image configuration (under the <code class="code docutils literal"><span class="pre">vms:</span></code> section), and will also show the
+current state of its priority queue, with the highest priority and job that gets
+first-dibs on resources at the top of the list.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="debugging.html" class="btn btn-neutral float-right" title="Debugging Talus" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Talus" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Optiv Labs.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

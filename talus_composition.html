@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; Talus 0.0.1 documentation</title>
+  <title>Talus Composition &mdash; Talus 0.0.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -113,8 +113,12 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>Talus Composition</li>
       <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/talus_composition.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -123,19 +127,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="talus-composition">
+<h1>Talus Composition<a class="headerlink" href="#talus-composition" title="Permalink to this headline">¶</a></h1>
+<p>Generally speaking, talus has two main components:</p>
+<ol class="arabic simple">
+<li>Master</li>
+<li>Slave(s)</li>
+</ol>
+<p>Talus users interact with Talus via <code class="docutils literal"><span class="pre">git</span></code> and the <span class="xref std std-ref">talus_client</span>.</p>
+<div class="section" id="master">
+<h2>Master<a class="headerlink" href="#master" title="Permalink to this headline">¶</a></h2>
+<p>The Talus master is responsible for managing the slaves and processing
+commands from the user.</p>
+<p>The master is made up of three main parts:</p>
+<ol class="arabic simple">
+<li>Web API</li>
+<li>RabbitMQ AMQP</li>
+<li>MongoDB</li>
+<li>Master Daemon</li>
+</ol>
+<p>Clients interact with Talus via the Web API, which only makes changes to the
+MongoDB database.</p>
+<p>The Master Daemon monitors MongoDB for changes (using replica sets and the
+oplog) and then acts on the changes. The Master Daemon then submits any jobs/messages
+into the appropriate RabbitMQ AMQP queues.</p>
+</div>
+<div class="section" id="slave">
+<h2>Slave<a class="headerlink" href="#slave" title="Permalink to this headline">¶</a></h2>
+<p>Slaves are responsible for consuming jobs from the jobs queue, running VMs, and
+reporting on progress and results of the jobs.</p>
+<p>Slaves interact directly with the Master by querying the database directly, and
+sending/receiving messages via AMQP. Slaves report job results and progress back
+to the Master via AMQP queues.</p>
+<p>VMs run on a slave do not use the AMQP queues or MongoDB directly. Once a VM is
+spun up for a job, the slave daemon injects a bootstrap script and a config file
+into the VM.</p>
+<p>The bootstrap is then run, which dynamically downloads the necessary code
+from the git repository (via the <code class="docutils literal"><span class="pre">code_cache</span></code> app on the Master&#8217;s web service).</p>
+</div>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
           </div>
@@ -177,7 +208,6 @@
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -193,14 +223,7 @@
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>
