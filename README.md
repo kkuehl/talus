@@ -6,7 +6,7 @@
 
 Talus is a distributed "run-your-tool-in-a-VM-and-get-results-back-out" framework.
 
-See the (detailed installation/usage documentation)[http://d0c-s4vage.github.io/talus/] for more info.
+See the [detailed installation/usage documentation](http://d0c-s4vage.github.io/talus/) for more info.
 
 # Related
 
