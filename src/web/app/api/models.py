@@ -6,7 +6,7 @@ import pymongo
 import talus_web.settings
 
 if not talus_web.settings.NO_CONNECT:
-	connect("talus", host="talus_db", port=27017, read_preference=pymongo.ReadPreference.NEAREST, slaveOk=True)
+	connect("talus", host="talus-db", port=27017, read_preference=pymongo.ReadPreference.NEAREST, slaveOk=True)
 	DB = mongoengine.connection.get_db()
 
 class Result(Document):

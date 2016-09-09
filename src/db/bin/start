@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "running a temporary db container (talus_db)"
+echo "running a temporary db container (talus-db)"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
@@ -12,7 +12,7 @@ sudo docker run \
 	--rm \
 	-v /var/log/talus:/talus/logs \
 	-v /talus/data:/talus/data \
-	--name talus_db \
-	--hostname talus_db \
+	--name talus-db \
+	--hostname talus-db \
 	-p 27017:27017 \
-	$@ talus_db
+	$@ talus-db

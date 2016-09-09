@@ -1,5 +1,5 @@
 """
-WSGI config for talus_web project.
+WSGI config for talus-web project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

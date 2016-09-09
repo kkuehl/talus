@@ -1,4 +1,4 @@
-# sudo build -t talus_amqp .
+# sudo build -t talus-amqp .
 
 FROM ubuntu:14.04
 

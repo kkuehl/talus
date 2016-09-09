@@ -2,6 +2,13 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+
+echo "building docs first"
+cd "$DIR/../../../docs"
+make html
+rm -rf "$DIR/../docs" || true
+cp -r build/html "$DIR/../docs"
+
 cd "$DIR/.."
 
-sudo docker build -t talus_web $@ .
+sudo docker build -t talus-web $@ .

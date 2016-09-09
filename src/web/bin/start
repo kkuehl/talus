@@ -12,12 +12,12 @@ sudo chmod -R g+ws /talus/install
 
 if [ "$1" = "dev" ] ; then
 	shift
-	sudo docker kill talus_web_dev || true
-	sudo docker rm talus_web_dev || true
+	sudo docker kill talus-web_dev || true
+	sudo docker rm talus-web_dev || true
 	sudo docker run \
 		-it \
 		--rm \
-		--link talus_db:talus_db \
+		--link talus-db:talus-db \
 		-p 0.0.0.0:8080:8080 \
 		-v /var/lib/libvirt/images:/images:ro \
 		-v $DIR/../app:/web \
@@ -25,14 +25,14 @@ if [ "$1" = "dev" ] ; then
 		-v /tmp/talus/tmp:/tmp \
 		-v /talus/install:/talus_install \
 		-v /talus/talus_code_cache:/code_cache \
-		--name talus_web_dev \
-		$@ talus_web
+		--name talus-web_dev \
+		$@ talus-web
 else
 	"$DIR"/stop
 
 	sudo docker run \
 		--rm \
-		--link talus_db:talus_db \
+		--link talus-db:talus-db \
 		-p 0.0.0.0:80:80 \
 		-p 0.0.0.0:8001:8001 \
 		-v /var/lib/libvirt/images:/images:ro \
@@ -40,6 +40,6 @@ else
 		-v /tmp/talus/tmp:/tmp \
 		-v /talus/install:/talus_install \
 		-v /talus/talus_code_cache:/code_cache \
-		--name talus_web \
-		$@ talus_web
+		--name talus-web \
+		$@ talus-web
 fi

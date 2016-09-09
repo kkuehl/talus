@@ -4,7 +4,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 $DIR/stop
 
-echo "running a temporary amqp container (talus_amqp)"
+echo "running a temporary amqp container (talus-amqp)"
 
 mkdir -p /talus/data
 
@@ -12,7 +12,7 @@ sudo docker run \
 	--rm \
 	-v /var/log/talus:/talus/logs \
 	-v /talus/data:/talus/data \
-	--name talus_amqp \
-	--hostname talus_amqp \
+	--name talus-amqp \
+	--hostname talus-amqp \
 	-p 5672:5672 \
-	$@ talus_amqp
+	$@ talus-amqp

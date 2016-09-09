@@ -9,7 +9,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 $DIR/build
 
-cat << EOF > /tmp/talus_web.conf
+cat << EOF > /tmp/talus-web.conf
 description "Talus Web"
 author		"Optiv Labs"
 
@@ -22,4 +22,4 @@ script
 end script
 EOF
 
-sudo mv /tmp/talus_web.conf /etc/init/
+sudo mv /tmp/talus-web.conf /etc/init/

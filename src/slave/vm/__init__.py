@@ -142,6 +142,8 @@ class ImageManager(object):
 
         self._downloading_images[image_id].set()
         del self._downloading_images[image_id]
+
+        return True
     
     def ensure_image(self, image_id):
         """Ensure that the image ``image_id`` and its bases exist in LIBVIRT_BASE

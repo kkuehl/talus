@@ -1,4 +1,4 @@
-# sudo docker build -t talus_db .
+# sudo docker build -t talus-db .
 
 FROM ubuntu:14.04
 

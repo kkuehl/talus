@@ -1,11 +1,11 @@
-# sudo docker build -t talus_web .
+# sudo docker build -t talus-web .
 
 FROM ubuntu:14.04
 MAINTAINER Optiv Research <research@accuvant.com>
 
 # Update package list and upgrade
 RUN apt-get update && \
-    apt-get -y -q upgrade
+	apt-get -y -q upgrade
 
 # Install dependencies from apt
 RUN apt-get install --no-install-recommends -q -y \
@@ -26,6 +26,7 @@ ADD startup.sh /startup.sh
 ADD apache/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 ADD apache/ports.conf /etc/apache2/ports.conf
 
+ADD ./docs /docs
 ADD ./app /web
 RUN pip install -r /web/requirements/production.txt
 RUN cd /web \

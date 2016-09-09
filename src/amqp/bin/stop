@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "stopping temporary amqp container (talus_amqp)"
+echo "stopping temporary amqp container (talus-amqp)"
 
-sudo docker kill talus_amqp 2>&1 >/dev/null || true
-sudo docker rm talus_amqp 2>&1 >/dev/null || true
+sudo docker kill talus-amqp 2>&1 >/dev/null || true
+sudo docker rm talus-amqp 2>&1 >/dev/null || true
