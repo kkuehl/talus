@@ -95,6 +95,9 @@ def qemu_convert_image(image_path, target_format, target_path=None, orig_format=
 
 	args = ["qemu-img", "convert", "-f", orig_format, "-O", target_format, image_path, target_path]
 	output = run(args)
+	print("----------------")
+	print(output)
+	print("----------------")
 
 	return target_path
 

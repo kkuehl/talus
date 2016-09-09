@@ -113,7 +113,8 @@ class ImageManager(object):
         return output
     
     def download_image(self, image_id):
-        """Download the image from the image_url"""
+        """Download the image from the image_url, returning True/False if the operation
+        was successful."""
         downloading_already = False
         with self._downloading_images_lock:
             downloading_already = (image_id in self._downloading_images)
@@ -131,7 +132,12 @@ class ImageManager(object):
         dest = os.path.join(LIBVIRT_BASE, image_filename)
         self._log.debug("downloading image {} to {}".format(image_id, dest))
 
-        wget("-q", "-O", dest, self.image_url + "/" + image_filename)
+        try:
+            wget("-q", "-O", dest, self.image_url + "/" + image_filename)
+        except:
+            self._log.error("Could not download image! aborting running this VM")
+            return False
+
         self._log.debug("downloaded {}".format(image_id))
 
         self._downloading_images[image_id].set()
@@ -151,7 +157,8 @@ class ImageManager(object):
 
         dest = os.path.join(LIBVIRT_BASE, image_id_to_volume(image_id))
         if not os.path.exists(dest):
-            self.download_image(image_id)
+            if not self.download_image(image_id):
+                return False
 
         else:
             images = Image.objects(id=image_id)
@@ -175,7 +182,9 @@ class ImageManager(object):
             backing = info["backing file"]
             # backing will be a (absolute?) path
             backing_id = os.path.basename(backing).split("_")[0]
-            self.ensure_image(backing_id)
+            if not self.ensure_image(backing_id):
+                self._log.error("Could not ensure backing image {}".format(backing_id))
+                return False
         else:
             self._log.debug("no backing file, image looks good!")
 

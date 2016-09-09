@@ -53,7 +53,7 @@ class JobHandler(object):
 		"""
 		# this check is usually performed in the _handle_job_progress function, as
 		# the progress of jobs is received over AMQP. We should check it here as well,
-		# just in case talus_master daemon is restarted and jobs end up with a progress
+		# just in case talus-master daemon is restarted and jobs end up with a progress
 		# higher than their limit
 		if self.job.limit != -1 and self.job.progress >= self.job.limit:
 			self.job.status = {"name": "stop"}
@@ -150,6 +150,7 @@ class JobManager(threading.Thread):
 		self._job_amqp_queues = {}
 		# dict of {<jobid>: JobHandler}
 		self._job_handlers = {}
+		self._job_handlers_lock = threading.Lock()
 	
 	def run(self):
 		"""Run the job manager. Only one of these should ever be running at a time
@@ -327,9 +328,16 @@ class JobManager(threading.Thread):
 		self._log.info("cleaning up job: {}".format(job.id))
 
 		if str(job.id) in self._job_handlers:
-			handler = self._job_handlers[str(job.id)]
-			handler.cleanup()
-			del self._job_handlers[str(job.id)]
+			with self._job_handlers_lock:
+				handler = self._job_handlers[str(job.id)]
+				handler.cleanup()
+				try:
+					del self._job_handlers[str(job.id)]
+
+				# not even sure how this happens, since we check a few lines up, and this is the only place things are removed,
+				# so we'll just wrap it in a try/except
+				except KeyError as e:
+					pass
 
 	def _create_handlers_for_existing(self):
 		self._log.info("creating job handlers for existing running jobs in the database")
@@ -352,7 +360,7 @@ class JobManager(threading.Thread):
 		"""Should be called when an AMQP_JOB_STATUS_QUEUE message is received - intended
 		to be for job progress...  maybe more?
 		"""
-		self._log.info("received job status: {}".format(body))
+		#self._log.debug("received job status: {}".format(body))
 
 		# just ack it immediately
 		self._amqp_man.ack_method(method)
@@ -394,7 +402,7 @@ class JobManager(threading.Thread):
 	def _handle_job_progress(self, data):
 		"""Handling job progress
 		"""
-		self._log.debug("handling job progress: {}".format(data))
+		#self._log.debug("handling job progress: {}".format(data))
 
 		Job.objects(id=data["job"]).update_one(inc__progress = data["amt"])
 

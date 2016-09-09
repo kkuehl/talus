@@ -16,6 +16,7 @@ class Result(Document):
 	data		= DictField()
 	created		= DateTimeField(default=datetime.datetime.now)
 	tags		= ListField(StringField())
+    slave       = StringField(required=False, default="unknown")
 
 class Code(Document):
 	name		= StringField(unique_with="type")

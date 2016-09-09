@@ -113,8 +113,8 @@ sudo apt-get install -y \
 
 (mkdir -p /tmp/vagrant_install \
 	&& cd /tmp/vagrant_install \
-	&& wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.2_x86_64.deb \
-	&& sudo dpkg -i vagrant_1.7.2_x86_64.deb \
+	&& wget https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb \
+	&& sudo dpkg -i vagrant_1.8.5_x86_64.deb \
 	&& rm -rf /tmp/vagrant_install)
 
 vagrant plugin install vagrant-libvirt
@@ -127,7 +127,7 @@ echo ""
 echo 
 read -p "through which interface does the master interact with the slaves?" intf
 
-cat << EOF > /tmp/talus_master.conf
+cat << EOF > /tmp/talus-master.conf
 description "Talus Master Daemon"
 author		"Optiv Labs"
 
@@ -140,6 +140,6 @@ script
 end script
 EOF
 
-sudo mv /tmp/talus_master.conf /etc/init/
+sudo mv /tmp/talus-master.conf /etc/init/
 
 sudo $DIR/init_repo
