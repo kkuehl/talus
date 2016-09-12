@@ -22,7 +22,7 @@ echo "The slave should be ready to go now"
 echo "Upstart scripts:"
 echo "    /etc/init/talus_slave.conf"
 echo ""
-echo "logs can be found in /etc/upstart/talus_slave.log"
+echo "logs can be found in /var/log/upstart/talus_slave.log"
 echo ""
 echo "starting upstart jobs now"
 

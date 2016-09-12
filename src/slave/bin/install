@@ -21,6 +21,8 @@ sudo apt-get install -y \
 	apparmor-utils \
 	wget \
 	genisoimage \
+	libssl-dev \
+	libffi-dev \
 	gcc make pkg-config libxml2-dev libgnutls-dev libdevmapper-dev libcurl4-gnutls-dev python-dev libpciaccess-dev libxen-dev libnl-dev libyajl-dev uuid-dev libpcap-dev xsltproc
 
 sudo pip install \
@@ -35,6 +37,8 @@ sudo pip install \
 	sh \
 	twisted \
 	xmltodict \
+	service_identity \
+	cryptography \
 
 (
 	cd /tmp ; \

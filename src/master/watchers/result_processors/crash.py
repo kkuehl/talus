@@ -12,9 +12,6 @@ import zipfile
 import master.watchers.result_processors as processors
 from master.models import *
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "pyactlab"))
-import pyactlab
-
 try:
     import master.watchers.result_processors.crash_task_maker as crash_task_maker
 except ImportError as e:
@@ -38,7 +35,7 @@ class CrashProcessor(processors.ResultProcessorBase):
             fs.delete(repro)
 
         result.delete()
-    
+
     def process(self, result):
         """Process the crash result
 
