@@ -402,7 +402,7 @@ class JobManager(threading.Thread):
 	def _handle_job_progress(self, data):
 		"""Handling job progress
 		"""
-		#self._log.debug("handling job progress: {}".format(data))
+		self._log.debug("handling job progress: {}".format(data))
 
 		Job.objects(id=data["job"]).update_one(inc__progress = data["amt"])
 
@@ -414,6 +414,7 @@ class JobManager(threading.Thread):
 		job = handler.job
 		job.reload()
 
+		self._log.debug("checking whether job is finished {} {}/{}".format(job.id, job.progress, job.limit))
 		if job.limit != -1 and job.progress >= job.limit:
 			self._log.debug("job {} finished ({}/{})".format(job.id, job.progress, job.limit))
 			self.stop_job(job)

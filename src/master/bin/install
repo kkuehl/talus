@@ -118,7 +118,7 @@ sudo apt-get install -y \
 	&& rm -rf /tmp/vagrant_install)
 
 vagrant plugin install vagrant-libvirt
-sudo pip install xmltodict mongoengine mock pymongo==2.8.0 sh pika docutils netifaces pip2pi
+sudo pip install tabulate xmltodict mongoengine mock pymongo==2.8.0 sh pika docutils netifaces pip2pi
 
 echo "USER INPUT" 
 echo "USER INPUT" 

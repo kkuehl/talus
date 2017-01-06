@@ -857,19 +857,26 @@ class VMManager(object):
                     f.truncate()
 
             # update the machine index
-            with open(os.path.join(self._vagrant_base, "data", "machine-index", "index")) as f:
-                data = json.loads(f.read())
             try:
-                del data["machines"][image_name]
-            except KeyError:
+                with open(os.path.join(self._vagrant_base, "data", "machine-index", "index")) as f:
+                    data = json.loads(f.read())
+                try:
+                    del data["machines"][image_name]
+                except KeyError:
+                    pass
+
+                with open(os.path.join(self._vagrant_base, "data", "machine-index", "index"), "wb") as f:
+                    f.write(json.dumps(data))
+                self._log.debug("machine-index/index updated")
+            except IOError:
+                self._log.debug("machine-index/index appears to be missing")
                 pass
-
-            with open(os.path.join(self._vagrant_base, "data", "machine-index", "index"), "wb") as f:
-                f.write(json.dumps(data))
-
         # now also delete it from the libvirt pool
         conn = self._libvirt()
-        default_pool = conn.storagePoolLookupByName("default")
+        try:
+          default_pool = conn.storagePoolLookupByName("default")
+        except libvirt.libvirtError:
+          pass
 
         try:
             volume_name = image_name + "_vagrant_box_image_0.img"

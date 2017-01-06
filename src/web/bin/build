@@ -4,10 +4,8 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 
 echo "building docs first"
-cd "$DIR/../../../docs"
-make html
-rm -rf "$DIR/../docs" || true
-cp -r build/html "$DIR/../docs"
+$DIR/../../../bin/build_docs
+cp -r $DIR/../../../docs/build/html "$DIR/../docs"
 
 cd "$DIR/.."
 

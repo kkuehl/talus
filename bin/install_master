@@ -14,31 +14,34 @@ cd $DIR/..
 
 echo "installing db"
 src/db/bin/install
-sudo start talus_db
+sudo start talus-db
 
 echo "installing amqp"
 src/amqp/bin/install
-sudo start talus_amqp
+sudo start talus-amqp
+
+echo "building docs"
+$DIR/build_docs
 
 echo "installing web"
 src/web/bin/install
-sudo start talus_web
+sudo start talus-web
 
 echo "installing master"
 src/master/bin/install
 
 echo "Everything *should* be installed and upstart scripts should be in place"
 echo "Upstart scripts:"
-echo "    /etc/init/talus_db.conf"
-echo "    /etc/init/talus_amqp.conf"
-echo "    /etc/init/talus_web.conf"
-echo "    /etc/init/talus_master.conf"
+echo "    /etc/init/talus-db.conf"
+echo "    /etc/init/talus-amqp.conf"
+echo "    /etc/init/talus-web.conf"
+echo "    /etc/init/talus-master.conf"
 echo ""
 echo "logs can either be found in /var/log/talus/, or /var/log/upstart/talus_*.log"
 echo ""
 echo "starting upstart jobs now"
 
-sudo start talus_master
+sudo start talus-master
 
 echo "done installing, things should be running. The web API should be available at http://localhost/api"
 echo "now"

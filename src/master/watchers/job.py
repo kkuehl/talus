@@ -34,7 +34,7 @@ class JobWatcher(WatcherBase):
 		self._handle_status(id_, obj)
 
 	def update(self, id, mod):
-		self._log.debug("handling update")
+		self._log.debug("handling update {} {}".format(id, mod))
 
 		self._handle_status(id, mod)
 	
@@ -55,9 +55,11 @@ class JobWatcher(WatcherBase):
 		if job is None:
 			jobs = master.models.Job.objects(id=id_)
 			if len(jobs) == 0:
+				self._log.debug("_handle_status failed to find job {}".format(id_))
 				return
 			job = jobs[0]
 
+		self._log.debug("_handle_status status is {}".format(job.status["name"]))
 		if job.status["name"] in switch:
 			switch[job.status["name"]](id_, job)
 	

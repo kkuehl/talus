@@ -13,7 +13,7 @@ Master Daemon
 -------------
 
 The talus master daemon is an upstart job. The job configuration is found
-in :code:`/etc/init/talus_master.conf`:
+in :code:`/etc/init/talus-master.conf`:
 
 .. code-block:: bash
 
@@ -28,24 +28,24 @@ in :code:`/etc/init/talus_master.conf`:
             /home/talus/talus/src/master/bin/start_raw em1
     end script
 
-Logs for the master daemon can be found in :code:`/var/log/upstart/talus_master.log`. These logs
+Logs for the master daemon can be found in :code:`/var/log/upstart/talus-master.log`. These logs
 are automatically rotated and are created by upstart.
 
 Restarting
 ^^^^^^^^^^
 
 To restart the master daemon (say, after having made some code changes, to force it to reconnect
-to the AMQP server, etc), run :code:`sudo stop talus_master`. This *should* stop the master
+to the AMQP server, etc), run :code:`sudo stop talus-master`. This *should* stop the master
 daemon. If after a few seconds the master daemon does not gracefully quit (confirm with :code:`ps aux | grep master`),
 force-kill any running master daemons with a good ol' :code:`kill -KILL`.
 
-After the master daemon has been killed, start it again with :code:`sudo start talus_master`.
+After the master daemon has been killed, start it again with :code:`sudo start talus-master`.
 
 Slave Daemon
 ------------
 
 The talus slave daemon that is present on each of the slaves is an upstart job. The job
-configuration is found in :code:`/etc/init/talus_slave.conf`:
+configuration is found in :code:`/etc/init/talus-slave.conf`:
 
 .. code-block:: bash
 
@@ -68,7 +68,7 @@ on libvirtd. There might be a better way around this, but this works.
 Restarting
 ^^^^^^^^^^
 
-To restart the slave daemon, run :code:`sudo restart talus_slave`. The slave daemon will
+To restart the slave daemon, run :code:`sudo restart talus-slave`. The slave daemon will
 gracefully shutdown, killing all running vms before doing so. Sometimes this can take up to a minute
 before the slave daemon has completely quit.
 
@@ -152,14 +152,14 @@ entrypoint int the container specifies how the container should be started, unle
 parameter is passed with the :code:`docker run` command.
 
 Dockers containers can be linked to other already-running docker containers. For example, the script to run the
-:code:`talus_web` container links itself to the :code:`talus_db` container (:code:`--link ...`), exposes several ports so that it
+:code:`talus-web` container links itself to the :code:`talus-db` container (:code:`--link ...`), exposes several ports so that it
 can accept remote connections (:code:`-p ...`), and mounts several volumes inside the container (:code:`-v ...`). The full script can be found in :code:`talus/src/web/bin/start` in the source tree:
 
 .. code-block:: bash
 
 	sudo docker run \
 		--rm \
-		--link talus_db:talus_db \
+		--link talus-db:talus-db \
 		-p 80:80 \
 		-p 8001:8001 \
 		-v /var/lib/libvirt/images:/images:ro \
@@ -167,21 +167,21 @@ can accept remote connections (:code:`-p ...`), and mounts several volumes insid
 		-v /tmp/talus/tmp:/tmp \
 		-v /talus/install:/talus_install \
 		-v /talus/talus_code_cache:/code_cache \
-		--name talus_web \
-		$@ talus_web
+		--name talus-web \
+		$@ talus-web
 
 MongoDB
 -------
 
 There is a specific order that docker containers must be started on the master. Most of the containers/services
-rely on the :code:`talus_db` container being up and running. If the master needed to be rebooted and things
+rely on the :code:`talus-db` container being up and running. If the master needed to be rebooted and things
 start complaining about connections, try shutting them down and restarting them in this order:
 
-#. :code:`start talus_db`
-#. :code:`start talus_amqp` - this does not depend on talus_db, so this could be first if you wanted)
-#. :code:`start talus_web`
-#. :code:`start talus_master`
-#. :code:`start talus_slave` - if you also have a slave daemon running on the master server
+#. :code:`start talus-db`
+#. :code:`start talus-amqp` - this does not depend on talus-db, so this could be first if you wanted)
+#. :code:`start talus-web`
+#. :code:`start talus-master`
+#. :code:`start talus-slave` - if you also have a slave daemon running on the master server
 
 Mongodb logs are stored in :code:`/var/log/talus/mongodb/*`.
 
@@ -190,7 +190,7 @@ Mongodb data is stored in :code:`/talus/data/*`.
 Since the db is running in a container, you can't drop into a mongo shell on the master
 and attempt to connect to localhost (and actually, no mongo tools are required to be installed
 on the master, so you might not be able to that out of the box anyways). You could either lookup the connection
-info of the :code:`talus_db` container (which port it's forwarded to locally), or you can start a
+info of the :code:`talus-db` container (which port it's forwarded to locally), or you can start a
 temporary container that has all of the necessary mongodb tools that will drop you into a mongo
 shell. I highly recommend the second approach.
 
@@ -202,7 +202,7 @@ database), after which you can perform raw mongodb commands:
 
     talus@:~$ talus/src/db/bin/shell
     MongoDB shell version: 3.0.6
-    connecting to: talus_db:27017/test
+    connecting to: talus-db:27017/test
     Welcome to the MongoDB shell.
     For interactive help, type "help".
     For more comprehensive documentation, see
@@ -258,7 +258,7 @@ you cannot make changes to the data (iirc). The code the startup.sh script runs 
 
 .. code-block:: javascript
 
-    cfg={"_id" :"rs0", "version": 1, "members": [{"_id": 0, "host": "talus_db:27017"}]}
+    cfg={"_id" :"rs0", "version": 1, "members": [{"_id": 0, "host": "talus-db:27017"}]}
     rs.initiate(cfg)
     rs.reconfig(cfg, {force:true})
     rs.slaveOk()
@@ -271,8 +271,8 @@ fails to work.
 AMQP
 ----
 
-AMQP is also containerized with docker and is run as an upstart job. The upstart config for the :code:`talus_amqp`
-upstart job is found at :code:`/etc/init/talus_amqp.conf`.
+AMQP is also containerized with docker and is run as an upstart job. The upstart config for the :code:`talus-amqp`
+upstart job is found at :code:`/etc/init/talus-amqp.conf`.
 
 Logs for amqp should be found at :code:`/var/log/talus/rabbitmq/*`.
 
@@ -281,11 +281,11 @@ This should rarely have to be debugged. Since it is debugged so rarely, debuggin
 However, if AMQP was suspected of being a problem, here's a few things I'd check
 out:
 
-* restart amqp with :code:`sudo restart talus_amqp`
+* restart amqp with :code:`sudo restart talus-amqp`
 * look in the logs at :code:`/var/log/talus/rabbitmq/*`
-* setup the `RabbitMQ management console <https://www.rabbitmq.com/management.html>`_ and expose ports in the :code:`talus_amqp`
+* setup the `RabbitMQ management console <https://www.rabbitmq.com/management.html>`_ and expose ports in the :code:`talus-amqp`
     container so that you can access the management console remotely.
-* stop the :code:`talus_amqp` container and run it the container manually with
+* stop the :code:`talus-amqp` container and run it the container manually with
     the entrypoint set to bash so that you can do additional debugging:
     * :code:`talus/src/amqp/bin/start --entrypoint bash`
 
@@ -294,7 +294,7 @@ Webserver
 
 Debugging the webserver should be fairly simple. The webserver is containerized
 using docker and is run as an upstart job. The upstart script is found in
-:code:`/etc/init/talus_web.conf`.
+:code:`/etc/init/talus-web.conf`.
 
 Logs for the talus web services are found in
 :code:`/var/log/talus/apache2/*.log`.
@@ -309,20 +309,20 @@ you need to make some code changes.
 
 My usual workflow goes like this:
 
-#. Make sure :code:`talus_db` is running
+#. Make sure :code:`talus-db` is running
 #. Scp/rsync my code into the remote :code:`talus/src/web` directory
-#. Start a dev talus_web container with bash as the new entrypoint:
+#. Start a dev talus-web container with bash as the new entrypoint:
 
 .. code-block:: bash
 
     talus:~$ talus/src/web/bin/start dev --entrypoint bash
-    Error response from daemon: Cannot kill container talus_web_dev: no such id: talus_web_dev
-    Error: failed to kill containers: [talus_web_dev]
-    Error response from daemon: no such id: talus_web_dev
-    Error: failed to remove containers: [talus_web_dev]
+    Error response from daemon: Cannot kill container talus-web_dev: no such id: talus-web_dev
+    Error: failed to kill containers: [talus-web_dev]
+    Error response from daemon: no such id: talus-web_dev
+    Error: failed to remove containers: [talus-web_dev]
     root@54f7352ff90b:/# cd web
     root@54f7352ff90b:/web# ls
-    README  api  code_cache  launch.sh  manage.py  passwords  requirements  talus_web
+    README  api  code_cache  launch.sh  manage.py  passwords  requirements  talus-web
     root@54f7352ff90b:/web# python manage.py runserver 0.0.0.0:8080
     DEBUG IS TRUE
     DEBUG IS TRUE
@@ -330,7 +330,7 @@ My usual workflow goes like this:
 
     System check identified no issues (0 silenced).
     October 30, 2015 - 21:20:21
-    Django version 1.8.1, using settings 'talus_web.settings'
+    Django version 1.8.1, using settings 'talus-web.settings'
     Starting development server at http://0.0.0.0:8080/
     Quit the server with CONTROL-C.
 

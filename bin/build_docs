@@ -4,6 +4,9 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 cd "$DIR/../docs"
 
+sudo apt-get install -y python-sphinx
+sudo pip install sphinx-rtd-theme
+
 rm -rf source/generated
 mkdir -p source/generated
 
