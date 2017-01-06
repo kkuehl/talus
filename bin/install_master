@@ -2,9 +2,12 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-echo "installing docker"
-$DIR/install_docker
-echo "done installing docker"
+if [ ! -e "/usr/bin/docker" ]; then
+	echo "installing docker"
+        wget -qO- https://get.docker.com/ | sh
+        sudo usermod -aG docker $(whoami)
+	echo "done installing docker"
+fi
 
 # THIS IS ABSOLUTELY NEEDED IN ORDER TO RUN talus_slave and talus_{db,amqp,web} on
 # the same host!!!!!
