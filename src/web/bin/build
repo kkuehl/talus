@@ -2,13 +2,15 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-
 echo "building docs first"
-cd "$DIR/../../../docs"
-make html
-rm -rf "$DIR/../docs" || true
-cp -r build/html "$DIR/../docs"
+$DIR/../../../bin/build_docs
 
+cp -R $DIR/../../../docs/build/html/ "$DIR/../docs"
+
+find "$DIR/../docs" -type d -exec chmod 755 "{}" \;
+find "$DIR/../docs" -type f -exec chmod 644 "{}" \;
+find "$DIR/../app" -type d -exec chmod 755 "{}" \;
+find "$DIR/../app" -type f -exec chmod 644 "{}" \;
 cd "$DIR/.."
 
 sudo docker build -t talus-web $@ .
