@@ -3,45 +3,93 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 if [ ! -e "/usr/bin/docker" ]; then
-	echo "installing docker"
+	echo "[+] installing docker"
         wget -qO- https://get.docker.com/ | sh
         sudo usermod -aG docker $(whoami)
-	echo "done installing docker"
+	echo "[+] done installing docker"
 fi
 
 # THIS IS ABSOLUTELY NEEDED IN ORDER TO RUN talus_slave and talus_{db,amqp,web} on
 # the same host!!!!!
-echo -e "\n\nDOCKER_OPTS=\"\$DOCKER_OPTS --iptables=false\"" | sudo tee --append /etc/default/docker > /dev/null
+if grep -q 'iptables=false' /etc/default/docker; then
+	echo "[+] /etc/default/docker looks good"
+else
+	echo -e "\n\nDOCKER_OPTS=\"\$DOCKER_OPTS --iptables=false\"" | sudo tee --append /etc/default/docker > /dev/null
+fi
 
 cd $DIR/..
 
-echo "installing db"
-src/db/bin/install
-sudo start talus_db
+if docker images | grep -q 'talus-db'; then
+	echo "[+] talus-db docker mongodb container already installed"
+	echo "If you want to rebuild this container, perform docker rmi talus-db"
+else
+	echo "[+] installing talus-db docker mongodb container"
+	src/db/bin/install
+fi
 
-echo "installing amqp"
-src/amqp/bin/install
-sudo start talus_amqp
+if docker images | grep -q 'talus-amqp'; then
+	echo "[+] talus-amqp docker rabbitmq amqp container already installed"
+	echo "If you want to rebuild this container, perform docker rmi talus-amqp"
+else
+	echo "[+] installing talus-amqp docker rabbitmq amqp container"
+	src/amqp/bin/install
+fi
 
-echo "installing web"
-src/web/bin/install
-sudo start talus_web
+if docker images | grep -q 'talus-web'; then
+	echo "[+] talus-web apache2 docker container already installed"
+	echo "If you want to rebuild this container, perform docker rmi talus-web"
+else
+	echo "[+] installing talus-web docker apache2 web container"
+	src/web/bin/install
+fi
 
 echo "installing master"
 src/master/bin/install
 
+if [[ `systemctl` =~ -\.mount ]]; then
+echo "Everything *should* be installed and systemd scripts should be in place"
+echo "Systemd scripts:"
+echo "    /etc/systemd/system/docker.talus-db.service"
+echo "    /etc/systemd/system/docker.talus-amqp.service"
+echo "    /etc/systemd/system/docker.talus-web.service"
+echo "    /etc/systemd/system/talus-master.service"
+echo ""
+echo "log locations:"
+echo "  talus-amqp - /var/log/talus/rabbitmq"
+echo "  talus-db - /var/log/talus/mongodb"
+echo "  talus-web - /var/log/talus/apache2"
+echo "  talus-master - journalctl -u talus-master.service"
+echo ""
+echo "starting systemd jobs now"
+
+sudo systemctl daemon-reload
+sudo systemctl start docker.talus-db
+sudo systemctl enable docker.talus-db
+sudo systemctl start docker.talus-amqp
+sudo systemctl enable docker.talus-amqp
+sudo systemctl start docker.talus-web
+sudo systemctl enable docker.talus-web
+sudo systemctl start talus-master
+sudo systemctl enable talus-master
+
+else
+
 echo "Everything *should* be installed and upstart scripts should be in place"
 echo "Upstart scripts:"
-echo "    /etc/init/talus_db.conf"
-echo "    /etc/init/talus_amqp.conf"
-echo "    /etc/init/talus_web.conf"
-echo "    /etc/init/talus_master.conf"
+echo "    /etc/init/talus-db.conf"
+echo "    /etc/init/talus-amqp.conf"
+echo "    /etc/init/talus-web.conf"
+echo "    /etc/init/talus-master.conf"
 echo ""
-echo "logs can either be found in /var/log/talus/, or /var/log/upstart/talus_*.log"
+echo "logs can either be found in /var/log/talus/, or /var/log/upstart/talus-*.log"
 echo ""
 echo "starting upstart jobs now"
+sudo start talus-db
+sudo start talus-amqp
+sudo start talus-web
+sudo start talus-master
 
-sudo start talus_master
+fi
 
 echo "done installing, things should be running. The web API should be available at http://localhost/api"
 echo "now"
