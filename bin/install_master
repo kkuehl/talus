@@ -24,7 +24,7 @@ if docker images | grep -q 'talus-db'; then
 	echo "If you want to rebuild this container, perform docker rmi talus-db"
 else
 	echo "[+] installing talus-db docker mongodb container"
-	src/db/bin/install
+	docker pull talus/talus-db
 fi
 
 if docker images | grep -q 'talus-amqp'; then
@@ -32,7 +32,7 @@ if docker images | grep -q 'talus-amqp'; then
 	echo "If you want to rebuild this container, perform docker rmi talus-amqp"
 else
 	echo "[+] installing talus-amqp docker rabbitmq amqp container"
-	src/amqp/bin/install
+	docker pull talus/talus-amqp
 fi
 
 if docker images | grep -q 'talus-web'; then
@@ -40,7 +40,7 @@ if docker images | grep -q 'talus-web'; then
 	echo "If you want to rebuild this container, perform docker rmi talus-web"
 else
 	echo "[+] installing talus-web docker apache2 web container"
-	src/web/bin/install
+	docker pull talus/talus-web
 fi
 
 echo "installing master"

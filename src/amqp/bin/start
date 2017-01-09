@@ -18,6 +18,7 @@ sudo docker run \
 	 -v /talus/data:/var/lib/rabbitmq \
          -v /var/log/talus/rabbitmq:/talus/logs/rabbitmq \
 	 -p 8080:15672 rabbitmq:3-management
+	 $@ talus/talus-amqp
 
 else
 sudo docker run \
@@ -27,5 +28,5 @@ sudo docker run \
 	--name talus-amqp \
 	-v /talus/data:/var/lib/rabbitmq \
         -v /var/log/talus/rabbitmq:/talus/logs/rabbitmq \
-	 $@ talus-amqp
+	 $@ talus/talus-amqp
 fi

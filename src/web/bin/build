@@ -13,4 +13,7 @@ find "$DIR/../app" -type d -exec chmod 755 "{}" \;
 find "$DIR/../app" -type f -exec chmod 644 "{}" \;
 cd "$DIR/.."
 
-sudo docker build -t talus-web $@ .
+sudo docker build -t talus/talus-web $@ .
+docker login
+docker push talus/talus-web
+
