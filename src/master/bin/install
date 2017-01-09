@@ -9,7 +9,7 @@ sudo useradd -M talus -g talus
 sudo mkdir -p /talus/install
 
 sudo cp $DIR/../../slave/vm/prebootstrap.py /talus/install/
-cat << EOF > /talus/install/IMAGE_SETUP_README.txt
+cat << EOF | sudo tee /talus/install/IMAGE_SETUP_README.txt > /dev/null
 Requirements:
 =============
 
@@ -127,7 +127,7 @@ read -p "through which interface does the master interact with the slaves?" intf
 
 if [[ `systemctl` =~ -\.mount ]]; then
 echo "Installing talus-db as systemd service"
-cat << EOF | sudo tee /etc/systemd/system/talus-master.service
+cat << EOF | sudo tee /etc/systemd/system/talus-master.service > /dev/null
 [Unit]
 Description=Talus DB Container
 Requires=docker.service
@@ -144,7 +144,7 @@ EOF
 
 else
 
-cat << EOF | sudo tee /etc/init/talus-master.conf
+cat << EOF | sudo tee /etc/init/talus-master.conf > /dev/null
 description "Talus Master Daemon"
 author		"Optiv Labs"
 start on filesystem or runlevel [2345]

@@ -8,7 +8,7 @@ $DIR/build
 
 if [[ `systemctl` =~ -\.mount ]]; then
 echo "Installing talus-db as systemd service"
-cat << EOF | sudo tee /etc/systemd/system/docker.talus-db.service
+cat << EOF | sudo tee /etc/systemd/system/docker.talus-db.service > /dev/null
 [Unit]
 Description=Talus DB Container
 Requires=docker.service
@@ -26,7 +26,7 @@ EOF
 sudo chmod 664 /etc/systemd/system/docker.talus-db.service
 
 else
-cat << EOF | sudo tee /etc/init/talus-amqp.conf
+cat << EOF | sudo tee /etc/init/talus-amqp.conf > /dev/null
 description "Talus AMQP"
 author		"Optiv Labs"
 
