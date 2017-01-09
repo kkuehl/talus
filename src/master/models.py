@@ -5,10 +5,9 @@ import datetime
 from mongoengine import *
 import os
 
-def do_connect(talus_env=None):
-    if talus_env is None:
-        # this is to be set by whatever starts the master docker container
-        talus_env = os.environ["TALUS_DB_PORT_27017_TCP"].replace("tcp://", "")
+def do_connect():
+    # this is to be set by whatever starts the master docker container
+    talus_env = os.environ["TALUS_DB_PORT_27017_TCP"].replace("tcp://", "")
     talus_host,talus_port = talus_env.split(":")
     talus_port = int(talus_port)
 

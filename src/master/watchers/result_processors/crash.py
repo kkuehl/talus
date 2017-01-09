@@ -35,7 +35,7 @@ class CrashProcessor(processors.ResultProcessorBase):
             fs.delete(repro)
 
         result.delete()
-
+    
     def process(self, result):
         """Process the crash result
 
