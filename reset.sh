@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ `systemctl` =~ -\.mount ]]; then
 	sudo systemctl stop talus-master
-	sudo systemctl stop talus-slave
+#	sudo systemctl stop talus-slave
 	sudo systemctl stop docker.talus-web
 	sudo systemctl stop docker.talus-amqp
 	sudo systemctl stop docker.talus-db
@@ -34,7 +34,7 @@ sleep 20s
 if [[ `systemctl` =~ -\.mount ]]; then
 	sudo systemctl start docker.talus-web
 	sudo systemctl start talus-master
-	sudo systemctl start talus-slave
+#	sudo systemctl start talus-slave
 else
 	sudo start talus-web
 	sudo start talus-master
