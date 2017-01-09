@@ -28,7 +28,7 @@ libvirtd --version
 echo "Testing a libvirt vagrant image..."
 
 if [ -d "/tmp/test_image" ]; then
-	rm -rf /tmp/test_image
+	sudo rm -rf /tmp/test_image
 fi
 
 mkdir -p /tmp/test_image \
