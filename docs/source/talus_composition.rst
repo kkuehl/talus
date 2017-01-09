@@ -2,7 +2,7 @@
 
 
 Talus Composition
-=========================
+=================
 
 Generally speaking, talus has two main components:
 
