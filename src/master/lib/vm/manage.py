@@ -270,7 +270,8 @@ class VagrantWorker(VMWorker):
         else:
             # only do this if vagrant up is still running and the domain
             # exists!
-            self._hotplug_empty_disk()
+            # Commenting out the following line as a test - kkuehl@gmail.com
+            # self._hotplug_empty_disk()
 
             # the box is up, so let's wait until we have a valid vnc port
             # TODO should probably have some sort of time on this

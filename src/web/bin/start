@@ -26,7 +26,7 @@ if [ "$1" = "dev" ] ; then
 		-v /talus/install:/talus_install \
 		-v /talus/talus_code_cache:/code_cache \
 		--name talus-web_dev \
-		$@ talus-web
+		$@ talus/talus-web
 else
 	"$DIR"/stop
 
@@ -41,5 +41,5 @@ else
 		-v /talus/install:/talus_install \
 		-v /talus/talus_code_cache:/code_cache \
 		--name talus-web \
-		$@ talus-web
+		$@ talus/talus-web
 fi

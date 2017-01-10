@@ -137,7 +137,7 @@ of the interactive create shells, use :code:`talus <cmd> create --shell`:
    talus:job:create> save
 
 Help
-^^^^^
+^^^^
 
 All commands in the talus_client_ have a help command that accepts another command
 as an argument and will display a (hopefully) helpful help message:
@@ -322,7 +322,7 @@ on startup. An easy way to do this is to place a link to the prebootstrap in the
 Startup folder.
 
 General Requirements
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 Below is a list of other requirements that should be installed/setup in the VM
 

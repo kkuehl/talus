@@ -96,7 +96,7 @@ plugin to be added. During development of talus, several pull requests were subm
 to give us the functionality we needed.
 
 Libvirt
--------------
+-------
 
 Libvirtd
 ^^^^^^^^
@@ -138,7 +138,7 @@ I commonly found myself doing something like:
     for id in $(sudo virsh list --all | tail -n+3 | awk '{print $1}') ; do sudo virsh destroy $id ; done
 
 Docker
-----
+------
 
 Several talus components are containerized using Docker_. Docker (essentially a wrapper around linux containers)
 makes it easy to configure environments for a service. It uses an incremental build process to build containers.
@@ -290,7 +290,7 @@ out:
     * :code:`talus/src/amqp/bin/start --entrypoint bash`
 
 Webserver
-----
+---------
 
 Debugging the webserver should be fairly simple. The webserver is containerized
 using docker and is run as an upstart job. The upstart script is found in

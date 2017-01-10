@@ -2,16 +2,14 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-sudo mkdir -p /talus/data /var/log/talus/{apache2}
-
+sudo mkdir -p /talus/data /var/log/talus/apache2
+sudo groupadd talus
 sudo useradd -M talus -g talus
 
 sudo mkdir -p /talus/install
-sudo chown talus:talus /talus/install
-sudo chmod -R g+ws /talus/install
 
-cp $DIR/../../slave/vm/prebootstrap.py /talus/install/
-cat << EOF > /talus/install/IMAGE_SETUP_README.txt
+sudo cp $DIR/../../slave/vm/prebootstrap.py /talus/install/
+cat << EOF | sudo tee /talus/install/IMAGE_SETUP_README.txt > /dev/null
 Requirements:
 =============
 
@@ -28,17 +26,33 @@ All:
 
 Windows:
 --------
+Install Windows use the username user and the password password.
+Set to Autologin
 
-Make sure the following are installed:
+1. Install python https://www.python.org/downloads/windows/
+2. Download prebuilt lxml from http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+pip install lxml-3.6.4-cp27-cp27m-win_amd64.whl
+3. pip install requests
+4. pip install comtypes
+5.Install WinDBG by Downloading the Windows 10 SDK
+https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk
+If you want to download only Debugging Tools for Windows, install the Windows SDK, and, during the installation, select the Debugging Tools for Windows box and clear all the other boxes.
+6. Download and extract !exploitable from https://msecdbg.codeplex.com/
+Copy x86 msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x86\winext
+Copy x64 msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x64\winext
+7. Launch command prompt as Administrator.
+  Type netplwiz
+  Select user
+  Disable Users must enter a username and password to use this computer.
 
-* comtypes
-* pip install requests
 * Windbg
 * potentially pre-generated fastoche comtypes python files
-* python
 * VCREDIST 2012 x86 AND x64 (for windbg msec.dll)
 * msec.dll in the winext folder of both x86 and x64 windbgs
 * psexec (all pstools?)
+* git clone https://github.com/iidx/pycdb.git
+cd pycdb
+python ./setup.py install
 
 Be sure to do the following:
 
@@ -56,7 +70,7 @@ You must also configure WINRM by doing (in an Administrator cmd.exe):
 Also note that all created networks in the VM must be set the “Work”
 network. This can be set to be the default action by going to:
 
-	Open "gpedit.msc" -> Go to Computer Configration –> Windows Settings –> Security Settings –> Network list manager
+	Open "gpedit.msc" -> Go to Computer Configuration –> Windows Settings –> Security Settings –> Network list manager
 
 It may also help to attempt to shrink the size of the VM using sdelete
 
@@ -67,12 +81,18 @@ Linux:
 
 Make sure the following are installed:
 
-* pip (apt-get install python-pip)
-* python
+* sudo apt-get install -y python python-pip vim git llvm lldb openssh-server
+
+pip install requests
+pip install comtypes
+pip install lxml
 
 Be sure to do the following:
 
 * passwordless sudo
+sudo visudo and add the following:
+ALL            ALL = (ALL) NOPASSWD: ALL
+
 
 Prebootstrap.py
 ===============
@@ -84,12 +104,15 @@ point it will import and run the bootstrap (and hence your jobs).
 gl;hf
 -d0c
 EOF
+sudo chown talus:talus /talus/install
+sudo chmod -R g+ws /talus/install
 
 mkdir -p /tmp/talus/tmp
 chmod -R o+rws /tmp/talus/tmp
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+<<<<<<< HEAD
 sudo apt-get install -y \
 	libvirt-bin \
 	qemu-kvm \
@@ -119,6 +142,13 @@ sudo apt-get install -y \
 
 vagrant plugin install vagrant-libvirt
 sudo pip install tabulate xmltodict mongoengine mock pymongo==2.8.0 sh pika docutils netifaces pip2pi
+=======
+$DIR/../../../bin/install_vagrant
+
+sudo pip install --upgrade pip
+#sudo pip install xmltodict mongoengine mock pymongo pika docutils netifaces pip2pi tabulate
+sudo pip install pymongo netifaces mongoengine pika xmltodict tabulate sh pip2pi
+>>>>>>> 06feb30556e5b3f215439a059ea898da7708dc5c
 
 echo "USER INPUT" 
 echo "USER INPUT" 
@@ -127,19 +157,35 @@ echo ""
 echo 
 read -p "through which interface does the master interact with the slaves?" intf
 
-cat << EOF > /tmp/talus-master.conf
+if [[ `systemctl` =~ -\.mount ]]; then
+echo "Installing talus-db as systemd service"
+cat << EOF | sudo tee /etc/systemd/system/talus-master.service > /dev/null
+[Unit]
+Description=Talus DB Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=$(readlink -f $DIR)/start_raw $intf
+
+ExecStop=$(readlink -f $DIR)/stop_raw
+[Install]
+WantedBy=default.target
+EOF
+
+else
+
+cat << EOF | sudo tee /etc/init/talus-master.conf > /dev/null
 description "Talus Master Daemon"
 author		"Optiv Labs"
-
 start on filesystem or runlevel [2345]
 stop on shutdown
 respawn
-
 script
 	$(readlink -f $DIR)/start_raw $intf
 end script
 EOF
-
-sudo mv /tmp/talus-master.conf /etc/init/
+fi
 
 sudo $DIR/init_repo

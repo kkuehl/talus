@@ -15,6 +15,7 @@ from master.lib.amqp_man import AmqpManager
 from master import Master
 from master.watchers.result_processors import ResultProcessorBase
 
+
 class ResultWatcher(WatcherBase):
     collection = "talus.result"
 
@@ -28,17 +29,12 @@ class ResultWatcher(WatcherBase):
             if filename_ == "__init__.py":
                 continue
             mod_name = filename_.replace(".py", "")
-
-            try:
-                mod = __import__(
-                    "master.watchers.result_processors",
-                    globals(),
-                    locals(),
-                    fromlist=[mod_name]
-                )
-            except ImportError as e:
-                self._log.warn("could not load processor '{!r}'".format(mod_name))
-                
+            mod = __import__(
+                "master.watchers.result_processors",
+                globals(),
+                locals(),
+                fromlist=[mod_name]
+            )
             mod = getattr(mod, mod_name)
             for item_name in dir(mod):
                 item = getattr(mod, item_name)
@@ -69,7 +65,8 @@ class ResultWatcher(WatcherBase):
             try:
                 can_process = processor.can_process(result)
             except NotImplemented as e:
-                self._log.error("Result processor class '{}' does not implement the can_process function!".format(processor.__class__.__name__))
+                self._log.error("Result processor class '{}' does not implement the can_process function!".format(
+                    processor.__class__.__name__))
                 continue
 
             if can_process:
@@ -78,12 +75,12 @@ class ResultWatcher(WatcherBase):
                 try:
                     result.reload()
                 except Exception as e:
-                    #self._log.info("error reloading result document, probably deleted?? TODO verify this is OK", exc_info=True)
+                    # self._log.info("error reloading result document, probably deleted?? TODO verify this is OK", exc_info=True)
                     # if it's been deleted, then just return, as no other processors should be able to process it
                     return
 
     def update(self, id, mod):
         pass
-    
+
     def delete(self, id):
         pass

@@ -1,42 +1,31 @@
-# sudo docker build -t talus-web .
+FROM ubuntu:latest
 
-FROM ubuntu:14.04
-MAINTAINER Optiv Research <research@accuvant.com>
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    apache2 libapache2-mod-wsgi python-pip git vim
 
-# Update package list and upgrade
-RUN apt-get update && \
-	apt-get -y -q upgrade
+# Enable apache mods.
+RUN a2enmod wsgi
+RUN mkdir -p /log/apache2
 
-# Install dependencies from apt
-RUN apt-get install --no-install-recommends -q -y \
-		apache2 \
-		libapache2-mod-wsgi \
-		python python-pip \
-		python-dev \
-		build-essential \
-		git \
-		supervisor \
-	&& apt-get purge -y --auto-remove python-dev build-essential \
-	&& apt-get clean \
-	&& rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
-	&& mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/supervisor
-
-ADD startup.sh /startup.sh
+# This stopped working
+#ENV APACHE_LOG_DIR /logs/apache2
+# So APACHE_LOG_DIR is modified now in apache/envvars
+ADD apache/envvars /etc/apache2/
 
 ADD apache/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 ADD apache/ports.conf /etc/apache2/ports.conf
 
+# Expose apache.
+EXPOSE 80
+
+# Copy this repo into place.
 ADD ./docs /docs
 ADD ./app /web
+
 RUN pip install -r /web/requirements/production.txt
 RUN cd /web \
-	&& NO_CONNECT=1 python manage.py collectstatic --noinput
+  && NO_CONNECT=1 python manage.py collectstatic --noinput
+# confirm settings with apachectl -t -D DUMP_RUN_CFG in the container
 
-# Clean up
-RUN apt-get purge -y --auto-remove \
-        python-dev build-essential && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
 
-CMD []
-ENTRYPOINT ["/startup.sh"]

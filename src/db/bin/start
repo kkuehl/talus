@@ -15,4 +15,4 @@ sudo docker run \
 	--name talus-db \
 	--hostname talus-db \
 	-p 27017:27017 \
-	$@ talus-db
+	$@ talus/talus-db

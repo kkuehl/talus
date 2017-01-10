@@ -1,19 +1,18 @@
-# sudo build -t talus-amqp .
+FROM rabbitmq:latest
+# https://github.com/docker-library/rabbitmq
 
-FROM ubuntu:14.04
+RUN mkdir -p /talus/logs/rabbitmq \
+  && chown rabbitmq:rabbitmq /talus/logs/rabbitmq \
+  && mkdir -p /talus/data/rabbitmq \
+  && chown rabbitmq:rabbitmq /talus/data/rabbitmq
 
-RUN apt-get update
-RUN ln -s -f /bin/true /usr/bin/chfn
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y rabbitmq-server python-librabbitmq
-
-# /logs needs to be mounted as a volume
+# Change the default log locations from stdout
 ENV RABBITMQ_LOG_BASE /talus/logs/rabbitmq
 ENV RABBITMQ_MNESIA_BASE /talus/data/rabbitmq
 
-# rabbitmq port
-EXPOSE 5672
+VOLUME /talus/logs/rabbitmq
 
-ADD startup.sh /startup.sh
+CMD ["rabbitmq-server"]
 
-CMD []
-ENTRYPOINT ["/startup.sh"]
+
+

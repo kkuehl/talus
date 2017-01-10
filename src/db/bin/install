@@ -1,16 +1,36 @@
 #!/bin/bash
 
-sudo mkdir -p /talus/data /var/log/talus/{apache2}
+sudo mkdir -p /talus/data
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 $DIR/build
 
-cat << EOF > /tmp/talus-db.conf
-description "Talus DB"
+if [[ `systemctl` =~ -\.mount ]]; then
+echo "Installing talus-db as systemd service"
+cat << EOF | sudo tee /etc/systemd/system/docker.talus-db.service > /dev/null
+[Unit]
+Description=Talus DB Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=$(readlink -f $DIR)/start
+
+ExecStop=$(readlink -f $DIR)/stop
+
+[Install]
+WantedBy=default.target
+EOF
+sudo chmod 664 /etc/systemd/system/docker.talus-db.service
+
+else
+cat << EOF | sudo tee /etc/init/talus-amqp.conf > /dev/null
+description "Talus AMQP"
 author		"Optiv Labs"
 
-start on (starting talus-web or starting talus-master)
+start on (starting talus-master)
 stop on shutdown
 respawn
 
@@ -18,5 +38,4 @@ script
    $(readlink -f $DIR)/start
 end script
 EOF
-
-sudo mv /tmp/talus-db.conf /etc/init/
+fi
