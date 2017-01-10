@@ -95,7 +95,7 @@ fi
 sudo sh -c 'echo GRUB_CMDLINE_LINUX_DEFAULT="max_loop=64" >> /etc/default/grub'
 sudo update-grub2
 
-sudo sed -ri 's/#vnc_listen = "0.0.0.0"/vnc_listen - "0.0.0.0"/' /etc/libvirt/qemu.conf
+sudo sed -ri 's/#vnc_listen = "0.0.0.0"/vnc_listen = "0.0.0.0"/' /etc/libvirt/qemu.conf
 
 echo "NOTE NOTE NOTE NOTE NOTE NOTE NOTE"
 echo "NOTE NOTE NOTE NOTE NOTE NOTE NOTE"
