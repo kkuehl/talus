@@ -11,3 +11,6 @@ See the [detailed installation/usage documentation](http://d0c-s4vage.github.io/
 # Related
 
 Users interact with the talus framework via its REST api using the python [talus client](https://github.com/d0c-s4vage/talus_client) ([docs](http://d0c-s4vage.github.io/talus/getting_started.html#id2)).
+
+
+Pre-made [docker](http://www.docker.com) images are available [here](https://hub.docker.com/u/talus/dashboard/)
