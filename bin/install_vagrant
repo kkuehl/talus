@@ -37,6 +37,9 @@ mkdir -p /tmp/test_image \
 	&& sudo vagrant up --provider=libvirt \
 	&& vagrant box list \
 	&& sudo vagrant status \
+	&& sudo vagrant ssh -c 'uname -a' \
+	&& sudo vagrant box remove fedora/24-cloud-base \
 	&& sudo vagrant destroy \
+	&& sudo rm /var/lib/libvirt/images/fedora-VAGRANTSLASH-24-cloud-base_vagrant_box_image_*.img \
 	&& cd -
 
