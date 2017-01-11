@@ -64,12 +64,19 @@ ExecStart=/usr/local/bin/talus-slave
 [Install]
 WantedBy=default.target
 EOF
-sudo chmod 664 /etc/systemd/system/docker.talus-slave.service
+sudo chmod 664 /etc/systemd/system/talus-slave.service
 
 cat << EOF | sudo tee /usr/local/bin/talus-slave > /dev/null
 #!/bin/bash
-	sudo aa-complain /usr/sbin/libvirtd
-	sudo $(readlink -f $DIR)/start_raw $1 $2 $3 2>&1 >> /var/log/talus/slave.log
+if [ "$EUID" -ne 0 ]; then
+	echo "Must be run as root"
+	exit
+fi
+aa-complain /usr/sbin/libvirtd
+aa-complain /usr/lib/libvirt/virt-aa-helper
+
+/home/kkuehl/Downloads/talus/src/slave/bin/start_raw 10.0.0.8 2 enx3c18a0402f57 2>&1 | tee /var/log/talus/slave.log
+
 EOF
 
 sudo chmod a+x /usr/local/bin/talus-slave
