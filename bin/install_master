@@ -19,6 +19,7 @@ fi
 
 cd $DIR/..
 
+# See https://hub.docker.com/r/talus/
 if docker images | grep -q 'talus-db'; then
 	echo "[+] talus-db docker mongodb container already installed"
 	echo "If you want to rebuild this container, perform docker rmi talus-db"
@@ -45,6 +46,8 @@ fi
 
 echo "installing master"
 src/master/bin/install
+
+# See https://docs.docker.com/engine/admin/host_integration/
 
 if [[ `systemctl` =~ -\.mount ]]; then
 echo "Everything *should* be installed and systemd scripts should be in place"
