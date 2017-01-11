@@ -294,7 +294,7 @@ class Master(object):
         )
 
         if "type" not in data or data["type"] not in switch:
-            self._log.warn("recieved slave data is in the wrong format")
+            self._log.warn("received slave data is in the wrong format")
         else:
             switch[data["type"]](data)
     

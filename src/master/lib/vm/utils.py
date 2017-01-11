@@ -60,7 +60,7 @@ def qemu_img_info(image_path):
 	return res
 
 def qemu_convert_image(image_path, target_format, target_path=None, orig_format=None):
-	"""`qemu_convert_image` will conver the image found at `image_path` to the specified format.
+	"""`qemu_convert_image` will convert the image found at `image_path` to the specified format.
 	It is expected that original file-type detection will be used. The resulting image
 	will be saved to `target_path`
 

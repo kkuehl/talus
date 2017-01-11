@@ -75,7 +75,7 @@ fi
 aa-complain /usr/sbin/libvirtd
 aa-complain /usr/lib/libvirt/virt-aa-helper
 
-/home/kkuehl/Downloads/talus/src/slave/bin/start_raw 10.0.0.8 2 enx3c18a0402f57 2>&1 | tee /var/log/talus/slave.log
+$(readlink -f $DIR)/start_raw $1 $2 $3 2>&1 | tee /var/log/talus/slave.log
 
 EOF
 
@@ -93,7 +93,7 @@ respawn
 
 script
 	aa-complain /usr/sbin/libvirtd
-	$(readlink -f $DIR)/start_raw $1 $2 $3 2>&1 >> /var/log/talus/slave.log
+	$(readlink -f $DIR)/start_raw $1 $2 $3 2>&1 | tee /var/log/talus/slave.log
 end script
 EOF
 

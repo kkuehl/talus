@@ -66,7 +66,7 @@ class LibvirtWrapper(object):
 		self._lock = threading.Lock()
 	
 	def restart_libvirtd(self):
-		self._l_log.debug("restaring libvirtd, waiting for lock")
+		self._l_log.debug("restarting libvirtd, waiting for lock")
 
 		self._can_be_used.clear()
 
@@ -322,7 +322,7 @@ class Slave(threading.Thread):
 	# -----------------------
 
 	def handle_guest_comms(self, data):
-		self._log.info("recieved guest comms! {}".format(str(data)[:100]))
+		self._log.info("received guest comms! {}".format(str(data)[:100]))
 
 		if "type" not in data:
 			self._log.warn("type not found in guest comms data: {}".format(data))
@@ -359,7 +359,7 @@ class Slave(threading.Thread):
 			self._log.warn("cannot find the handler for data: {}".format(data))
 	
 	def _handle_job_error(self, data):
-		self._log.debug("handling errored job part: {}:{}".format(data["job"], data["idx"]))
+		self._log.debug("handling job errors: {}:{}".format(data["job"], data["idx"]))
 
 		self._amqp_man.queue_msg(
 			json.dumps(dict(

@@ -70,7 +70,7 @@ class BasicMasterVMManageTests(unittest.TestCase):
 			"win7_setup_test",
 			"""
 			Vagrant.configure("2") do |config|
-				config.ssh.pasword = "password"
+				config.ssh.password = "password"
 				config.ssh.username = "username"
 				config.vm.box = "some_box"
 				config.vm.communicator = "winrm"

@@ -66,7 +66,7 @@ class JobWatcher(WatcherBase):
 	def _handle_run(self, id_, job):
 		"""Handle running a job
 		"""
-		self._log.info("handling job runnage")
+		self._log.info("handling job runner")
 
 		if job.image.status["name"] != "ready":
 			self._log.warn("Image is not in a ready state! cannot run the job yet, cancelling")

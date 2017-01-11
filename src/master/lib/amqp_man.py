@@ -38,7 +38,7 @@ class AmqpQueueHandler(threading.Thread):
 			if method is None:
 				time.sleep(0.1)
 				continue
-			#self._log.debug("recieved message")
+			#self._log.debug("received message")
 			self.callback(self.channel, method, props, body)
 
 		self._log.debug("finished")
@@ -218,7 +218,7 @@ class AmqpManager(threading.Thread):
 		"""
 		self._log.info("waiting until connected")
 		self._amqp_connected.wait(timeout)
-		# stupid, not sure if neccessary
+		# stupid, not sure if necessary
 		time.sleep(3)
 		self._log.info("connected!")
 	

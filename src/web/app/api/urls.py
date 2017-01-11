@@ -8,7 +8,7 @@ from api import views
 OBJ_ID = r'[0-9a-fA-F\-]+'
 
 # Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+# Additionally, we include login URLs for the browseable API.
 urlpatterns = [
 	# for temporary files
 	url(r"^upload/$", views.TmpFileUpload.as_view()),

@@ -178,7 +178,7 @@ class ImageManager(object):
 
             else:
                 self._log.debug(
-                    "image {} changed (model: {}, disk: {}), redownloading".format(image_id, image.md5, md5))
+                    "image {} changed (model: {}, disk: {}), downloading again".format(image_id, image.md5, md5))
                 self.download_image(image_id)
 
         info = qemu_img_info(dest)
