@@ -34,7 +34,8 @@ echo "Testing a libvirt vagrant image..."
 if [ -d "/tmp/test_image" ]; then
 	sudo rm -rf /tmp/test_image
 fi
-exit
+
+echo "Testing libvirt vagrant functionality outside the talus framework"
 
 mkdir -p /tmp/test_image \
 	&& cd /tmp/test_image \
