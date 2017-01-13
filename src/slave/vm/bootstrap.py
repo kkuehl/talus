@@ -8,22 +8,21 @@ import imp
 import json
 import logging
 import os
-import marshal
-import pip
-import pip.req
-import requests
 import re
-from requests.auth import HTTPBasicAuth
+import requests
 import select
 import site
 import socket
-import shutil
 import struct
 import subprocess
 import sys
 import threading
 import time
 import traceback
+from requests.auth import HTTPBasicAuth
+
+import pip
+import pip.req
 
 
 class FriendlyJSONEncoder(json.JSONEncoder):
@@ -254,9 +253,12 @@ class TalusCodeImporter(object):
         :param str abs_name: The absolute name of the module to be imported
         """
         package_name = abs_name.split(".")[0]
+        self._log.info('abs_name = {} package_name = {}'.format(abs_name, package_name))
 
         last_name = abs_name.split(".")[-1]
+        self._log.info('last_name = {}'.format(last_name))
         if last_name in sys.modules:
+            # self._log.info('{} in sys.modules {}'.format(last_name, sys.modules))
             return None
 
         try:
@@ -273,6 +275,7 @@ class TalusCodeImporter(object):
             pass
 
         if package_name == "talus" and self._module_in_git(abs_name):
+            self._log.info('Attempting to download_module {}'.format(package_name))
             self.download_module(abs_name)
             # THIS IS IMPORTANT, YES WE WANT TO RETURN NONE!!!
             # THIS IS IMPORTANT, YES WE WANT TO RETURN NONE!!!
@@ -341,7 +344,9 @@ class TalusCodeImporter(object):
         self._log.info("downloading module {}".format(abs_name))
 
         path = abs_name.replace(".", "/")
+        self._log.info('path = {}'.format(path))
         info = self._git_show(path)
+
 
         if info is None:
             info_test = self._git_show(path + ".py")
@@ -497,10 +502,8 @@ class TalusCodeImporter(object):
             auth=HTTPBasicAuth(self.username, self.password)
         )
 
-        self._log.info('url: {} status_code: {}'.format(res.url, res.status_code))
-        res.raise_for_status()
-
         if res.status_code // 100 != 2:
+            self._log.info('url: {} status_code: {}. returning None'.format(res.url, res.status_code))
             return None
 
         res = json.loads(res.text)
