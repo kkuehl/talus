@@ -10,7 +10,7 @@ import re
 
 logging.basicConfig(level=logging.DEBUG)
 
-from fileset import FileSet
+from talus.fileset import FileSet
 
 
 class TalusError(Exception): pass
