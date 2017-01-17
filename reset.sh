@@ -1,4 +1,5 @@
-#!/bin/bash
+<<<<<<< HEAD
+#!/bin/sh
 
 if [[ `systemctl` =~ -\.mount ]]; then
 	sudo systemctl stop talus-master

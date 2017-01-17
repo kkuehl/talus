@@ -111,11 +111,43 @@ chmod -R o+rws /tmp/talus/tmp
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+<<<<<<< HEAD
+sudo apt-get install -y \
+	libvirt-bin \
+	qemu-kvm \
+	virtinst \
+	python-libvirt \
+	qemu-utils \
+	libxslt-dev \
+	libxml2-dev \
+	libvirt-dev \
+	libxml2-dev \
+	libdevmapper-dev \
+	libnl-dev \
+	libffi-dev \
+	build-essential \
+	ruby-dev \
+	python-pip \
+	python-dev \
+	libyajl* \
+	wget \
+	gcc make pkg-config libxml2-dev libgnutls-dev libdevmapper-dev libcurl4-gnutls-dev python-dev libpciaccess-dev libxen-dev libnl-dev libyajl-dev uuid-dev libpcap-dev xsltproc
+
+(mkdir -p /tmp/vagrant_install \
+	&& cd /tmp/vagrant_install \
+	&& wget https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb \
+	&& sudo dpkg -i vagrant_1.8.5_x86_64.deb \
+	&& rm -rf /tmp/vagrant_install)
+
+vagrant plugin install vagrant-libvirt
+sudo pip install tabulate xmltodict mongoengine mock pymongo==2.8.0 sh pika docutils netifaces pip2pi
+=======
 $DIR/../../../bin/install_vagrant
 
 sudo pip install --upgrade pip
 #sudo pip install xmltodict mongoengine mock pymongo pika docutils netifaces pip2pi tabulate
 sudo pip install pymongo netifaces mongoengine pika xmltodict tabulate sh pip2pi
+>>>>>>> 06feb30556e5b3f215439a059ea898da7708dc5c
 
 echo "USER INPUT" 
 echo "USER INPUT" 
