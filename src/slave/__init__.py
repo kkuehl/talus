@@ -20,6 +20,8 @@ from twisted.internet import protocol, reactor, endpoints
 from twisted.protocols import basic
 import time
 import uuid
+import imp
+import traceback
 
 from slave.amqp_man import AmqpManager
 from slave.vm import VMHandler,ImageManager
@@ -167,21 +169,24 @@ class Slave(threading.Thread):
 
 	_INSTANCE = None
 	@classmethod
-	def instance(cls, amqp_host=None, max_vms=None, intf=None):
+	def instance(cls, amqp_host=None, max_vms=None, intf=None, plugins_dir=None):
 		if cls._INSTANCE is None:
-			cls._INSTANCE = cls(amqp_host, max_vms, intf)
+			cls._INSTANCE = cls(amqp_host, max_vms, intf, plugins_dir)
 		return cls._INSTANCE
 
-	def __init__(self, amqp_host, max_vms, intf):
+	def __init__(self, amqp_host, max_vms, intf, plugins_dir=None):
 		"""Init the slave"""
 
 		super(Slave, self).__init__()
 
 		self._max_vms = max_vms
-		self._max_vms_lock = threading.Semaphore(max_vms)
+		self._max_vms_lock = threading.Semaphore(self._max_vms)
 
 		self._amqp_host = amqp_host
 		self._log = logging.getLogger("Slave")
+		
+		self._plugins_dir = plugins_dir
+		self._load_plugins()
 
 		self._running = threading.Event()
 		self._slave_config_received = threading.Event()
@@ -218,7 +223,43 @@ class Slave(threading.Thread):
 
 		self._last_vm_started_evt = threading.Event()
 		self._last_vm_started_evt.set()
-	
+
+	def _load_plugins(self):
+		"""Scan plugins directory, if provided, to discover all modules and load them"""
+		self._plugins = []
+		
+		self._log.debug("plugins directory is '{}'".format(self._plugins_dir))
+		
+		if self._plugins_dir == None:
+			return
+		
+		# Find all files with .py extension, and all directories, and attempt to load them as modules
+		plugins_dir = os.path.abspath(self._plugins_dir)
+		for f in os.listdir(plugins_dir):
+			f_path = os.path.join(plugins_dir, f)
+			module_name, ext = os.path.splitext(f)
+			if ext <> '.py' and not os.path.isdir(f_path):
+				continue
+			try:
+				(mod_fp, pathname, description) = imp.find_module(module_name, [plugins_dir])
+				mod = imp.load_module(module_name, mod_fp, pathname, description)
+				self._log.info("imported plugin module {}".format(module_name))
+				self._plugins.append(mod)
+			except:
+				self._log.error("failed to import plugin module {}".format(module_name))
+		
+		self._emit_plugin_event("init", [self, self._log])
+
+	def _emit_plugin_event(self, event, args):
+		try:
+			for plugin in self._plugins:
+				# Find function in module
+				if hasattr(plugin, 'on_{}'.format(event)):
+					self._log.debug("calling plugin handler on_{} on {}".format(event, plugin.__name__))
+					getattr(plugin, 'on_{}'.format(event))(*args)
+		except BaseException as e:
+			traceback.print_exc()
+			
 	def _gen_mac_addrs(self):
 		self._mac_addrs = Queue()
 		base = "00:00:c0:a8:7b:{:02x}"
@@ -355,12 +396,14 @@ class Slave(threading.Thread):
 		if found_handler is not None:
 			found_handler.on_received_started()
 			self._last_vm_started_evt.set()
+			self._emit_plugin_event("job_started", args=[data])
 		else:
 			self._log.warn("cannot find the handler for data: {}".format(data))
 	
 	def _handle_job_error(self, data):
 		self._log.debug("handling errored job part: {}:{}".format(data["job"], data["idx"]))
 
+		self._emit_plugin_event("job_error", args=[data])
 		self._amqp_man.queue_msg(
 			json.dumps(dict(
 				type		= "error",
@@ -375,6 +418,7 @@ class Slave(threading.Thread):
 	def _handle_job_logs(self, data):
 		self._log.debug("handling debug logs from job part: {}:{}".format(data["job"], data["idx"]))
 
+		self._emit_plugin_event("job_logs", args=[data])
 		self._amqp_man.queue_msg(
 			json.dumps(dict(
 				type		= "log",
@@ -397,6 +441,7 @@ class Slave(threading.Thread):
 
 		if found_handler is not None:
 			found_handler.stop()
+			self._emit_plugin_event("job_finished", args=[data])
 		else:
 			self._log.warn("cannot find the handler for data: {}".format(data))
 	
@@ -412,6 +457,7 @@ class Slave(threading.Thread):
 		if matched_handler is not None:
 			matched_handler.total_progress += data["data"]
 
+		self._emit_plugin_event("job_progress", args=[data])
 		self._amqp_man.queue_msg(
 			json.dumps(dict(
 				type		= "progress",
@@ -425,6 +471,7 @@ class Slave(threading.Thread):
 	def _handle_job_result(self, data):
 		self._log.debug("handling job result: {}:{}".format(data["job"], data["idx"]))
 
+		self._emit_plugin_event("job_result", args=[data])
 		self._amqp_man.queue_msg(
 			json.dumps(dict(
 				type		= "result",
@@ -468,6 +515,8 @@ class Slave(threading.Thread):
 			self._max_vms_lock.release()
 			return
 
+		self._emit_plugin_event("job_received", args=[job_obj, data])
+		
 		# wait until the last vm started to start the next vm
 		self._log.debug("waiting for last vm to start running tool")
 		self._last_vm_started_evt.wait(2**31)
@@ -505,6 +554,8 @@ class Slave(threading.Thread):
 			with self._handlers_lock:
 				self._handlers.append(handler)
 			handler.start()
+
+		self._emit_plugin_event("job_starting", args=[data, handler])
 
 		self._update_status()
 		self._log.debug("done starting VMHandler")
@@ -615,17 +666,20 @@ class Slave(threading.Thread):
 			self._log.info("connecting to mongodb at {}".format(data["db"]))
 			self._db_host = data["db"]
 			slave.models.do_connect(self._db_host)
+			self._emit_plugin_event("config_db", args=[slave.models])
 
 		if "code" in data:
 			self._log.info("setting code loc to {}".format(data["code"]["loc"]))
 			self._code_loc = data["code"]["loc"]
 			self._code_username = data["code"]["username"]
 			self._code_password = data["code"]["password"]
+			self._emit_plugin_event("config_code", args=[data["code"]])
 
 		if "image_url" in data:
 			self._log.info("setting image url to {}".format(data["image_url"]))
 			self._image_url = data["image_url"]
 			self._image_man.instance().image_url = self._image_url
+			self._emit_plugin_event("config_images", args=[self._image_man.instance()])
 
 		if not self._already_consuming:
 			self._amqp_man.consume_queue(self.AMQP_JOB_QUEUE, self._on_job_received)
@@ -661,13 +715,13 @@ class Slave(threading.Thread):
 			self.AMQP_SLAVE_STATUS_QUEUE
 		)
 
-def main(amqp_host, max_vms, intf):
+def main(amqp_host, max_vms, intf, plugins_dir=None):
 	#_install_sig_handlers()
 
 	virt_ip = netifaces.ifaddresses('virbr2')[2][0]['addr']
 	endpoints.serverFromString(reactor, "tcp:55555:interface={}".format(virt_ip)).listen(GuestCommsFactory())
 
-	slave = Slave.instance(amqp_host, max_vms, intf)
+	slave = Slave.instance(amqp_host, max_vms, intf, plugins_dir)
 	reactor.callWhenRunning(slave.start)
 	reactor.addSystemEventTrigger("during", "shutdown", Slave.instance().stop)
 	reactor.run()
