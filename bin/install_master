@@ -26,6 +26,7 @@ if docker images | grep -q 'talus-db'; then
 else
 	echo "[+] installing talus-db docker mongodb container"
 	docker pull talus/talus-db
+	src/db/bin/install
 fi
 
 if docker images | grep -q 'talus-amqp'; then
@@ -34,6 +35,7 @@ if docker images | grep -q 'talus-amqp'; then
 else
 	echo "[+] installing talus-amqp docker rabbitmq amqp container"
 	docker pull talus/talus-amqp
+	src/amqp/bin/install
 fi
 
 if docker images | grep -q 'talus-web'; then
@@ -42,6 +44,7 @@ if docker images | grep -q 'talus-web'; then
 else
 	echo "[+] installing talus-web docker apache2 web container"
 	docker pull talus/talus-web
+	src/web/bin/install
 fi
 
 echo "installing master"
