@@ -23,6 +23,7 @@ cd $DIR/..
 if docker images | grep -q 'talus-db'; then
 	echo "[+] talus-db docker mongodb container already installed"
 	echo "If you want to rebuild this container, perform docker rmi talus-db"
+	echo "Then, 'cd talus/src/db/bin' and execute './build'"
 else
 	echo "[+] installing talus-db docker mongodb container"
 	docker pull talus/talus-db
@@ -32,6 +33,7 @@ fi
 if docker images | grep -q 'talus-amqp'; then
 	echo "[+] talus-amqp docker rabbitmq amqp container already installed"
 	echo "If you want to rebuild this container, perform docker rmi talus-amqp"
+	echo "Then, 'cd talus/src/amqp/bin' and execute './build'"
 else
 	echo "[+] installing talus-amqp docker rabbitmq amqp container"
 	docker pull talus/talus-amqp
@@ -41,6 +43,7 @@ fi
 if docker images | grep -q 'talus-web'; then
 	echo "[+] talus-web apache2 docker container already installed"
 	echo "If you want to rebuild this container, perform docker rmi talus-web"
+	echo "Then, 'cd talus/src/web/bin' and execute './build'"
 else
 	echo "[+] installing talus-web docker apache2 web container"
 	docker pull talus/talus-web

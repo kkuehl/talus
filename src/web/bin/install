@@ -7,7 +7,6 @@ chmod -R o+rws /tmp/talus/tmp
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-$DIR/build
 if [[ `systemctl` =~ -\.mount ]]; then
 
 echo "Installing talus-web as systemd service"

@@ -4,8 +4,6 @@ sudo mkdir -p /talus/data
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-$DIR/build
-
 if [[ `systemctl` =~ -\.mount ]]; then
 echo "Installing talus-db as systemd service"
 cat << EOF | sudo tee /etc/systemd/system/docker.talus-db.service > /dev/null
@@ -38,4 +36,5 @@ script
    $(readlink -f $DIR)/start
 end script
 EOF
+
 fi
