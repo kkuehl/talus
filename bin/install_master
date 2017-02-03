@@ -50,9 +50,6 @@ else
 	src/web/bin/install
 fi
 
-echo "installing master"
-src/master/bin/install
-
 # See https://docs.docker.com/engine/admin/host_integration/
 
 if [[ `systemctl` =~ -\.mount ]]; then
@@ -78,6 +75,11 @@ sudo systemctl start docker.talus-amqp
 sudo systemctl enable docker.talus-amqp
 sudo systemctl start docker.talus-web
 sudo systemctl enable docker.talus-web
+
+echo "installing master"
+src/master/bin/install
+
+sudo systemctl daemon-reload
 sudo systemctl start talus-master
 sudo systemctl enable talus-master
 
@@ -96,6 +98,10 @@ echo "starting upstart jobs now"
 sudo start talus-db
 sudo start talus-amqp
 sudo start talus-web
+
+echo "installing master"
+src/master/bin/install
+
 sudo start talus-master
 
 fi
