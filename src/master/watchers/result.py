@@ -1,18 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import bson
 import datetime
 import glob
 import os
-import sys
-import time
-import uuid
 
 import master.models
 from master.watchers import WatcherBase
-from master.lib.amqp_man import AmqpManager
-from master import Master
 from master.watchers.result_processors import ResultProcessorBase
 
 

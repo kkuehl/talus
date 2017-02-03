@@ -2,12 +2,6 @@
 # encoding: utf-8
 
 import gridfs
-import json
-import os
-from StringIO import StringIO
-import sys
-import tabulate
-import zipfile
 
 import master.watchers.result_processors as processors
 from master.models import *

@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import bson
 import logging
 import os
-from sh import md5sum
-import sys
 import time
-import uuid
+
+import bson
+from sh import md5sum
 
 logging.getLogger("sh").setLevel(logging.WARN)
 
 import master.models
-from master.lib.vm.manage import VMManager
 from master.watchers import WatcherBase
 
 class VMWatcher(WatcherBase):
