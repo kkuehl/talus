@@ -107,15 +107,15 @@ sudo chown talus:talus /talus/install
 sudo chmod -R g+ws /talus/install
 
 mkdir -p /tmp/talus/tmp
-chmod -R o+rws /tmp/talus/tmp
+sudo chmod -R o+rws /tmp/talus/tmp
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 $DIR/../../../bin/install_vagrant
 
-sudo pip install --upgrade pip
+sudo -H pip install --upgrade pip
 #sudo pip install xmltodict mongoengine mock pymongo pika docutils netifaces pip2pi tabulate
-sudo pip install pymongo netifaces mongoengine pika xmltodict tabulate sh pip2pi docutils
+sudo -H pip install pymongo netifaces mongoengine pika xmltodict tabulate sh pip2pi docutils
 
 echo "USER INPUT" 
 echo "USER INPUT" 
