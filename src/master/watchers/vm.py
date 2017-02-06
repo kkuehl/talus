@@ -6,11 +6,12 @@ import os
 import time
 
 import bson
-from sh import md5sum
+import hashlib
 
 logging.getLogger("sh").setLevel(logging.WARN)
 
 import master.models
+from master.lib.vm.manage import VMManager
 from master.watchers import WatcherBase
 
 class VMWatcher(WatcherBase):
@@ -197,6 +198,12 @@ class VMWatcher(WatcherBase):
             image.delete()
     
     # -----------------------
+    def md5sum(self, fname):
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
 
     def _set_image_ready(self, image_name):
         """Update the image named 'image_name' with a ready status. This SHOULD only
@@ -227,7 +234,7 @@ class VMWatcher(WatcherBase):
             self._log.warn("Could not find valid path for image {} to update md5".format(str(image.id)))
             return
 
-        md5,_ = md5sum(path).split()
+        md5 = self.md5sum(path)
 
         self._log.info("new md5: {}".format(md5))
         image.md5 = md5

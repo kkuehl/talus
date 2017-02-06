@@ -17,7 +17,7 @@ import uuid
 import sh
 import xmltodict
 from sh import arp
-from sh import md5sum
+import hashlib
 from sh import wget
 
 LIBVIRT_BASE = "/var/lib/libvirt/images"
@@ -74,6 +74,13 @@ class ImageManager(object):
         self._calc_md5_images = {}
         self._calc_md5_images_lock = threading.Lock()
 
+    def md5sum(self, fname):
+        hash_md5 = hashlib.md5()
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
     def get_md5(self, path):
         """Get the md5 of the file at ``path``. A cache will be used
         based on last modified time of the file. If the file does not
@@ -102,7 +109,8 @@ class ImageManager(object):
             return self._cache[path]["md5"]
 
         self._log.info("path not in cache ({}), calculating".format(path))
-        output = md5sum(path).split()[0]
+
+        output = self.md5sum(path)
         self._log.info("calculated md5: " + output)
         self._cache[path] = {
             "md5": output,
