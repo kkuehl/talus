@@ -68,9 +68,11 @@ WantedBy=default.target
 EOF
 sudo chmod 664 /etc/systemd/system/talus-slave.service
 
+REPLACEME="\$EUID"
+
 cat << EOF | sudo tee /usr/local/bin/talus-slave > /dev/null
 #!/bin/bash
-if [ "$EUID" -ne 0 ]; then
+if [ "$REPLACEME" -ne 0 ]; then
 	echo "Must be run as root"
 	exit
 fi
