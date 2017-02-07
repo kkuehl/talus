@@ -272,11 +272,11 @@ class VMHandler(threading.Thread):
         self._domain = None
         self._ip = None
         self._vm_killed = False
-        self._received_started_msg = False
+        self.received_started_msg = False
 
     def on_received_started(self):
         self.vm_status = "running tool"
-        self._received_started_msg = True
+        self.received_started_msg = True
 
     # DEAD CODE
     def unplug_bootstrap_img(self):
@@ -345,11 +345,11 @@ class VMHandler(threading.Thread):
         total_time = 0
         # while self._running.is_set() and self._vm_is_running() and total_time < self.timeout:
         while self._running.is_set() and total_time < self.timeout:
-            if not self._received_started_msg and total_time > self.startup_timeout:
+            if not self.received_started_msg and total_time > self.startup_timeout:
                 self._log.warn("never received startup message in {}s, bailing".format(self.startup_timeout))
                 return
 
-            #            elif self._received_started_msg and not self._released_boot_lock:
+            #            elif self.received_started_msg and not self._released_boot_lock:
             #                self._released_boot_lock = True
             #                self.boot_lock.release()
 
