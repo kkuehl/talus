@@ -3,6 +3,9 @@
 
 import datetime
 from mongoengine import *
+from mongoengine import EmbeddedDocument
+from mongoengine import BooleanField
+from mongoengine import EmbeddedDocumentField
 import os
 
 def do_connect(host):

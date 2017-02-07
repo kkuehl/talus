@@ -5,7 +5,9 @@ import datetime
 import os
 
 from mongoengine import *
-
+from mongoengine import EmbeddedDocument
+from mongoengine import BooleanField
+from mongoengine import EmbeddedDocumentField
 
 def do_connect():
     # this is to be set by whatever starts the master docker container
