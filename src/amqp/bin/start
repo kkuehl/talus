@@ -26,7 +26,6 @@ sudo docker run \
 	--hostname talus-amqp \
         -p 5672:5672 \
 	--name talus-amqp \
-	-v /talus/data:/var/lib/rabbitmq \
         -v /var/log/talus/rabbitmq:/talus/logs/rabbitmq \
 	 $@ talus/talus-amqp
 fi
