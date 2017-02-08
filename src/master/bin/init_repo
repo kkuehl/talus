@@ -13,8 +13,10 @@ function create_repo {
 	git init --bare --shared=group
 	chmod -R g+ws .
 	chgrp -R talus .
-	git config --global user.email "master@talus"
-	git config --global user.name "Talus Master"
+	if [ ! -f "$HOME/.gitconfig" ]; then
+		git config --global user.email "master@talus"
+		git config --global user.name "Talus Master"
+	fi
 	sudo git config --global user.email "master@talus"
 	sudo git config --global user.name "Talus Master"
 	git config core.sharedRepository true
