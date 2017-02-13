@@ -18,6 +18,7 @@ if [ "$1" = "dev" ] ; then
 		-it \
 		--rm \
 		--link talus-db:talus-db \
+		-p 0.0.0.0:80:80 \
 		-p 0.0.0.0:8080:8080 \
 		-v /var/lib/libvirt/images:/images:ro \
 		-v $DIR/../app:/web \
