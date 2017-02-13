@@ -1,16 +1,17 @@
-import getpass
 import json
+
+import logging
+
 from bson import json_util, ObjectId
 from django.http import HttpResponse
 import magic # python-magic
 import mimetypes
 import os
-import pwd
 import re
+
+from django.http import HttpResponseServerError
 from sh import git as GIT
-import shutil
 import tempfile
-import time
 
 code_path = "/code_cache/code"
 git = GIT.bake("--git-dir", os.path.join(code_path, ".git"), "--work-tree", code_path, _tty_out=False)
@@ -26,6 +27,9 @@ from rest_framework_mongoengine.generics import ListCreateAPIView, RetrieveUpdat
 
 from api.models import Image, OS, TmpFile, Code, Task, Job, Master, Slave, Result, DB, FileSet
 from api.serializers import OSSerializer, ImageSerializer, ImageImportSerializer, CodeSerializer, TaskSerializer, JobSerializer, MasterSerializer, SlaveSerializer, ResultSerializer, FileSetSerializer
+
+log = logging.getLogger(__file__)
+
 
 class TalusRenderer(JSONRenderer):
 	def render(self, data, accepted_media_type=None, renderer_context=None):
@@ -138,24 +142,22 @@ class CorpusFiles(APIView):
 			return response
 
 class TmpFileUpload(APIView):
-	parser_classes = (MultiPartParser,FormParser,)
-	
-	def post(self, request, filename=None, format=None):
+	def post(self, request):
+		if 'file' not in request.FILES:
+			log.error('no file in request')
+			return HttpResponseServerError('no file in request')
 		file_obj = request.FILES["file"]
 
 		new_file_path = tempfile.mktemp(dir="/tmp")
-		with open(new_file_path, "wb") as f:
-			for chunk in file_obj.chunks():
-				f.write(chunk)
-
-		# don't auto-delete the file when it's closed
-		file_obj.delete = False
+		temporary_file_path = file_obj.temporary_file_path()
+		log.info('renaming %s to %s', temporary_file_path, new_file_path)
+		os.rename(temporary_file_path, new_file_path)
 
 		tmp_file = TmpFile()
 		tmp_file.path = new_file_path
 		tmp_file.save()
 
-		response =  Response(str(tmp_file.id))
+		response = Response(str(tmp_file.id))
 		return response
 
 class CodeCreate(APIView):

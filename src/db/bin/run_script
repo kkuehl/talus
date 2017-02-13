@@ -9,7 +9,7 @@ echo "RUNNING $1 in mongo shell"
 
 sudo docker run \
 	--rm \
-	--link talus-db:talus-db \
+	--net talus_nw \
 	--name talus-db_shell \
 	-v $(dirname $1):/scripts \
 	-it \

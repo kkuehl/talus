@@ -9,17 +9,27 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import logging
 import os
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 NO_CONNECT = ("NO_CONNECT" in os.environ)
+MONGO_HOST = "talus-db"
 
+logging.basicConfig(
+	level=logging.INFO,
+)
+logging.getLogger().handlers[0].setFormatter(logging.Formatter("%(asctime)s %(levelname)s:%(name)s:%(message)s"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '0tg-fe$rac1mqzp7l#@4!e!)g0zymr-u^4ii$#yo_35ph$gk!w'
+
+FILE_UPLOAD_HANDLERS = ('talus_web.file_upload.SpaceEnsuringUploadHandler',)
 
 base = os.path.dirname("__file__").split(os.path.sep)[0]
 

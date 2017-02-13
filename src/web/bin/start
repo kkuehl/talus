@@ -17,9 +17,8 @@ if [ "$1" = "dev" ] ; then
 	sudo docker run \
 		-it \
 		--rm \
-		--link talus-db:talus-db \
+		--net talus_nw \
 		-p 0.0.0.0:80:80 \
-		-p 0.0.0.0:8080:8080 \
 		-v /var/lib/libvirt/images:/images:ro \
 		-v $DIR/../app:/web \
 		-v /var/log/talus:/logs \
@@ -33,9 +32,8 @@ else
 
 	sudo docker run \
 		--rm \
-		--link talus-db:talus-db \
+		--net talus_nw \
 		-p 0.0.0.0:80:80 \
-		-p 0.0.0.0:8001:8001 \
 		-v /var/lib/libvirt/images:/images:ro \
 		-v /var/log/talus:/logs \
 		-v /tmp/talus/tmp:/tmp \

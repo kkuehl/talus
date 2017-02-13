@@ -7,7 +7,7 @@ sudo docker rm talus-db_shell
 
 sudo docker run \
 	--rm \
-	--link talus-db:talus-db \
+	--net talus_nw \
 	--name talus-db_shell \
 	-it \
 	--entrypoint mongo \

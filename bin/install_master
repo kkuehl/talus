@@ -19,6 +19,13 @@ fi
 
 cd $DIR/..
 
+if docker network ls | grep -q 'talus_nw'; then
+    echo "[+] talus network already created"
+else
+    echo "[+] creating talus network"
+    docker network create --driver bridge talus_nw
+fi
+
 # See https://hub.docker.com/r/talus/
 if docker images | grep -q 'talus-db'; then
 	echo "[+] talus-db docker mongodb container already installed"

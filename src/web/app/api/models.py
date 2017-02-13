@@ -6,7 +6,7 @@ import pymongo
 import talus_web.settings
 
 if not talus_web.settings.NO_CONNECT:
-	connect("talus", host="talus-db", port=27017, read_preference=pymongo.ReadPreference.NEAREST, slaveOk=True)
+	connect("talus", host=talus_web.settings.MONGO_HOST, port=27017, read_preference=pymongo.ReadPreference.NEAREST, slaveOk=True)
 	DB = mongoengine.connection.get_db()
 
 class Result(Document):
@@ -16,7 +16,7 @@ class Result(Document):
 	data		= DictField()
 	created		= DateTimeField(default=datetime.datetime.now)
 	tags		= ListField(StringField())
-	slave       = StringField(required=False, default="unknown")
+	slave		= StringField(required=False, default="unknown")
 
 class Code(Document):
 	name		= StringField(unique_with="type")
