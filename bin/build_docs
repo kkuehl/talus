@@ -7,7 +7,7 @@ cd "$DIR/../docs"
 sudo apt-get install -y python-pip python-sphinx
 sudo pip install mock sphinx-rtd-theme scp
 
-rm -rf source/generated
+sudo rm -rf source/generated
 mkdir -p source/generated
 
 sphinx-apidoc -o source/generated ../src
