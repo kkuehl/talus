@@ -6,34 +6,37 @@ The manage module contains classes to manage VM creation,
 conversion, snapshots, and exporting
 """
 
-from collections import deque
 import json
 import libvirt
 import logging
-import os
 import math
+import os
 import re
-import sh
 import shutil
 import signal
 import socket
-import subprocess
-import sys
 import tempfile
-import time
 import threading
+import time
 import uuid
+from collections import deque
+
+import sh
 import xmltodict
 
 from . import utils
 
 DATA_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "..", "data")
 
+
 def libvirt_callback(ignore, err):
     if err[3] != libvirt.VIR_ERR_ERROR:
         # log it?
         pass
+
+
 libvirt.registerErrorHandler(f=libvirt_callback, ctx=None)
+
 
 class VMWorker(threading.Thread):
     """A threaded class that manages individual VMs"""
@@ -51,13 +54,13 @@ class VMWorker(threading.Thread):
         self._running = threading.Event()
         # used to signal that the machine is up and running
         self._accessible = threading.Event()
-    
+
     def run(self, user_interaction_cb):
         """Run the VM
         :returns: TODO
         """
         raise NotImplemented("Inheriting classes must implement the run function")
-    
+
     def stop(self, force=False):
         """Stop the running VM and block until everything is cleaned up
 
@@ -68,8 +71,8 @@ class VMWorker(threading.Thread):
         self._log.info("STOPPING")
         self._running.clear()
         self.join()
-    
-    def wait_for_ready(self, timeout=2**31):
+
+    def wait_for_ready(self, timeout=2 ** 31):
         """Block until the VM is up and running
         :timeout: max amount of time to wait for (seconds)
         :returns: None
@@ -90,20 +93,21 @@ class VMWorker(threading.Thread):
             self._log.debug("box is no longer running!")
         else:
             self._log.debug("timeout reached! bailing")
-    
+
     def get_vnc_info(self):
         """Return the vnc info for the worker
         :returns: TODO
 
         """
         raise NotImplemented("Inheriting classes must implement the get_vnc_info function")
-    
+
     def status(self):
         """Get the status of the VM
         :returns: A status string
 
         """
         raise NotImplemented("Inheriting classes must implement the status function")
+
 
 # not gonna be needed on the Master
 class KvmWorker(VMWorker):
@@ -120,12 +124,12 @@ class KvmWorker(VMWorker):
 
         self._libvirt_conn = None
         self._domain = None
-    
+
     def run(self):
         self._running.set()
 
         self._domain = self._image_path.replace(os.path.sep, "__")
-    
+
         domain_xml = """
             <domain type='kvm'>
               <name>{domain_name}</name>
@@ -164,22 +168,22 @@ class KvmWorker(VMWorker):
               </devices>
             </domain>
         """.format(
-            domain_name = self._domain,
-            domain_uuid = str(uuid.uuid4()),
-            mem_size    = 1024 * 1024,
-            num_cpus    = 2,
-            image_path    = self._image_path,
+            domain_name=self._domain,
+            domain_uuid=str(uuid.uuid4()),
+            mem_size=1024 * 1024,
+            num_cpus=2,
+            image_path=self._image_path,
         )
 
         conn = self._libvirt()
 
         domain = conn.createXML(domain_xml, 0)
-    
+
     def _libvirt(self):
         if self._libvirt_conn is None:
             self._libvirt_conn = libvirt.open("qemu:///system")
         return self._libvirt_conn
-    
+
     def _libvirt_domain(self):
         if self._domain is None:
             return None
@@ -191,10 +195,13 @@ class KvmWorker(VMWorker):
         except libvirt.libvirtError as e:
             return None
 
+
 class VagrantWorker(VMWorker):
     """A worker for managing a running vagrant image"""
 
-    def __init__(self, box_name, vagrantfile, idx, log, vagrant_base="~/.vagrant.d", image_store="/var/lib/libvirt/images", dest_name=None, import_image_path=None, iso_path=None, on_success=None, user_interaction=False, **options):
+    def __init__(self, box_name, vagrantfile, idx, log, vagrant_base="~/.vagrant.d",
+                 image_store="/var/lib/libvirt/images", dest_name=None, import_image_path=None, iso_path=None,
+                 on_success=None, user_interaction=False, os_type=None, **options):
         """docstring for VagrantWorker constructor
         
         :box_name: the name of the box to be run
@@ -224,7 +231,8 @@ class VagrantWorker(VMWorker):
         self._user_interaction = user_interaction
         self._options = options
         self._tmpdir = None
-        
+        self._os_type = os_type
+
     def do_run(self):
         """Run the run method and log any errors!
         """
@@ -234,7 +242,7 @@ class VagrantWorker(VMWorker):
             self._log.error("ERROR RUNNING VAGRANT WORKER!", exc_info=True)
         else:
             self._log.info("finished running vagrant worker")
-    
+
     def run(self):
         """Run the vagrant box by creating a project that uses the specified box
         """
@@ -243,6 +251,13 @@ class VagrantWorker(VMWorker):
         self._maybe_do_import()
 
         self._project_dir = self._create_vagrant_project(self._vagrantfile, base_name=self._box_name)
+
+        # for debugging
+        # self._run_env = {
+        #    "VAGRANT_CWD": self._project_dir,
+        #    "VAGRANT_LOG": "debug"
+        #}
+
         self._run_env = {
             "VAGRANT_CWD": self._project_dir
         }
@@ -257,7 +272,7 @@ class VagrantWorker(VMWorker):
         # wait for it to initally spin up, or for the proc to exit
         # break if the box is running or "vagrant up" has exited already
         count = 0
-        while not self._box_is_running() and proc.poll() is None:
+        while not self._box_is_running and proc.poll() is None:
             if count % 10 == 0:
                 self._log.debug("box isn't running yet, and 'vagrant up' has not exited yet")
             count += 1
@@ -308,7 +323,7 @@ class VagrantWorker(VMWorker):
             if self._dest_name is not None:
                 self._log.debug("calling self._on_success({})".format(self._dest_name))
                 self._on_success(self._dest_name)
-            
+
             # configure/import an image
             else:
                 self._log.debug("calling self._on_success({})".format(self._box_name))
@@ -337,7 +352,7 @@ class VagrantWorker(VMWorker):
             [proc.kill, []],
             [proc.send_signal, [signal.SIGKILL]]
         ]
-        for kill_method,kill_args in kill_methods:
+        for kill_method, kill_args in kill_methods:
             try:
                 kill_method(kill_args)
             except:
@@ -356,12 +371,13 @@ class VagrantWorker(VMWorker):
 
             # don't need to wait for user interaction, and the VM has been provisioned (vagrant up exited)
             if not self._user_interaction and proc.poll() is not None:
-                self._log.debug("non-interactive mode, vagrant up exited, shutting down VM and continuing on with my short life")
+                self._log.debug(
+                    "non-interactive mode, vagrant up exited, shutting down VM and continuing on with my short life")
                 self._vagrant_ensure_shutdown()
 
             # if the VM has been shutdown
-            if not self._box_is_running():
-                self._log.debug("running VM has been shutdown. continuing on")
+            if not self._box_is_running:
+                self._log.debug("from _poll_vm_status running VM has been shutdown. continuing on")
                 break
 
             time.sleep(0.2)
@@ -373,7 +389,7 @@ class VagrantWorker(VMWorker):
         needs_shutdown = True
         # give the shutdown command a chance to execute before we pull the plug
         for x in range(10):
-            if not self._box_is_running():
+            if not self._box_is_running:
                 self._log.debug("shutdown script worked, box shut down on its own")
                 needs_shutdown = False
                 break
@@ -384,7 +400,7 @@ class VagrantWorker(VMWorker):
             args = ["vagrant", "halt"]
             self._log.debug("running {}".format(" ".join(args)))
             output = utils.run(args, env=self._run_env)
-    
+
     def _hotplug_empty_disk(self):
         """Hotplug the cd into the VM. It is assumed that the
         domain exists (vm is up and running) when this function
@@ -409,11 +425,11 @@ class VagrantWorker(VMWorker):
 
         sh.virsh("attach-device", self._domain, disk_file)
 
-#        sh.qemu_img("create", "-f", "raw", self._tmpdisk, "1.1M")
-#        sh.Command("mkfs.ntfs")("-F", self._tmpdisk)
-#
-#        sh.virsh("attach-disk", self._domain, "--source", self._tmpdisk, "--target", "vdb")
-    
+    #        sh.qemu_img("create", "-f", "raw", self._tmpdisk, "1.1M")
+    #        sh.Command("mkfs.ntfs")("-F", self._tmpdisk)
+    #
+    #        sh.virsh("attach-disk", self._domain, "--source", self._tmpdisk, "--target", "vdb")
+
     def _maybe_do_import(self):
         """Maybe import an image into a vagrant box
         :returns: None
@@ -429,24 +445,26 @@ class VagrantWorker(VMWorker):
         self._log.debug("converting image at {!r} to qcow2 format".format(self._import_image_path))
         new_image_path = utils.qemu_convert_image(self._import_image_path, "qcow2")
         self._log.debug("qcow2 image now found at {!r}".format(new_image_path))
-        
+
         # only copy it if the resulting file is the same as the original file
         # (otherwise the normal behavior is that a new file MUST be created)
         copy = (new_image_path == self._import_image_path)
 
-        self._log.debug("imported image from\n\t{}\nto qcow2 image at\n\t{}".format(self._import_image_path, new_image_path))
+        self._log.debug(
+            "imported image from\n\t{}\nto qcow2 image at\n\t{}".format(self._import_image_path, new_image_path))
 
         self._create_vagrant_box(
             new_image_path,
             self._box_name,
             # use the default vagrant file, we'll use the user's vagrantfile when
             # we modify the imported image
-            vagrantfile=None,
-            copy=copy
+            copy=copy,
+            vagrantfile=None
         )
 
         self._log.info("vagrant box {!r} created".format(self._box_name))
-    
+
+    @property
     def _box_is_running(self):
         """Return True/False if the current box is still running
         :returns: True/False
@@ -455,29 +473,57 @@ class VagrantWorker(VMWorker):
         try:
             domain = conn.lookupByName(self._domain)
         except libvirt.libvirtError as e:
+            # self._log.error('domain {} error {}'.format(self._domain, e))
             return False
 
         if domain is None:
+            self._log.error('domain is None')
             return False
 
         retry_count = 0
-        max_retries = 5
+        max_retries = 10
         while True:
             retry_count += 1
+            # https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Guest_Domains-Information-IsActive.html
             try:
-                state,reason = domain.state()
-                break
+                flag = domain.isActive()
             except libvirt.libvirtError as e:
+                self._log.error('domain.isActive() error domain {} error {}'.format(self._domain, e))
+                return False
+            # https://libvirt.org/docs/libvirt-appdev-guide-python/en-US/html/libvirt_application_development_guide_using_python-Guest_Domains-Information-State.html
+            # state, reason = domain.state()
+            # if state == libvirt.VIR_DOMAIN_NOSTATE:
+            #    self._log.info('The state is VIR_DOMAIN_NOSTATE')
+            # elif state == libvirt.VIR_DOMAIN_RUNNING:
+            #    self._log.info('The state is VIR_DOMAIN_RUNNING')
+            # elif state == libvirt.VIR_DOMAIN_BLOCKED:
+            #    self._log.info('The state is VIR_DOMAIN_BLOCKED')
+            # elif state == libvirt.VIR_DOMAIN_PAUSED:
+            #    self._log.info('The state is VIR_DOMAIN_PAUSED')
+            # elif state == libvirt.VIR_DOMAIN_SHUTDOWN:
+            #    self._log.info('The state is VIR_DOMAIN_SHUTDOWN')
+            # elif state == libvirt.VIR_DOMAIN_SHUTOFF:
+            #    self._log.info('The state is VIR_DOMAIN_SHUTOFF')
+            # elif state == libvirt.VIR_DOMAIN_CRASHED:
+            #    self._log.info('The state is VIR_DOMAIN_CRASHED')
+            # elif state == libvirt.VIR_DOMAIN_PMSUSPENDED:
+            #    self._log.info('The state is VIR_DOMAIN_PMSUSPENDED')
+            # else:
+            #    self._log.info(' The state is unknown.')
+
+            # self._log.info('The reason code is ' + str(reason))
+
+            if flag:
+                # self._log.info('The domain {} is active.'.format(self._domain))
+                return True
+            else:
+                self._log.info(
+                    'The domain {} is not active. Attempt {}/{}'.format(self._domain, retry_count, max_retries))
                 if retry_count < max_retries:
                     time.sleep(5)
                 else:
                     return False
 
-        if state == libvirt.VIR_DOMAIN_RUNNING:
-            return True
-        else:
-            return False
-    
     def get_vnc_port(self):
         """Return the vnc port of the vagrant VM
         :returns: The vnc port. If the domain is not running, None is returned. If vnc is not (yet?) available, -1 is returned.
@@ -489,17 +535,18 @@ class VagrantWorker(VMWorker):
             return None
 
         info = xmltodict.parse(domain.XMLDesc())
+        # self._log.info('Here is the domain information: {}'.format(info))
         port = int(info["domain"]["devices"]["graphics"]["@port"])
 
         return port
-    
+
     def get_vnc_info(self):
         """Return the vnc info for the running vagrant worker
         :returns: TODO
 
         """
         port = self.get_vnc_port()
-        
+
         # TODO change this to some config setting?
         hostname = socket.gethostname()
 
@@ -508,7 +555,7 @@ class VagrantWorker(VMWorker):
         }
 
         return self._vnc_info
-    
+
     def _libvirt(self):
         """Return a libvirt connection
         :returns: TODO
@@ -517,7 +564,7 @@ class VagrantWorker(VMWorker):
         if self._libvirt_conn is None:
             self._libvirt_conn = libvirt.open("qemu:///system")
         return self._libvirt_conn
-    
+
     def _libvirt_domain(self):
         """Return the libvirt domain for the currently-running vagrant box
         :returns: libvirt.Domain if exists, None if it does not exist
@@ -529,7 +576,7 @@ class VagrantWorker(VMWorker):
             return domain
         except libvirt.libvirtError as e:
             return None
-    
+
     def _save(self):
         """Save the VM by either overwriting an existing vagrant box or creating a new vagrant box
         """
@@ -538,6 +585,7 @@ class VagrantWorker(VMWorker):
         vol_name = "{}_vagrant_box_image_0.img".format(self._dest_name)
         vagrant_image = "/var/lib/libvirt/images/{}".format(vol_name)
         info = utils.qemu_img_info(vm_path)
+        # self._log.info('vm_path {} info {}'.format(vm_path, info))
 
         # merge the changes made with the image `box_name`
         if self._dest_name is None:
@@ -554,8 +602,8 @@ class VagrantWorker(VMWorker):
                 img_dest = os.path.join(self._vagrant_base, "boxes", self._box_name, "0", "libvirt", "box.img")
 
                 # this is no longer needed b/c we're symlinking everything now
-                #if img_dest != info["backing file"]:
-                    #shutil.copyfile(info["backing file"], img_dest)
+                # if img_dest != info["backing file"]:
+                # shutil.copyfile(info["backing file"], img_dest)
 
                 # TODO make sure the correct backing file is in place in the image! Do this if it needs one and
                 # it isn't set:
@@ -570,7 +618,8 @@ class VagrantWorker(VMWorker):
 
             if not os.path.exists(vagrant_image):
                 self._log.debug("uploading image to libvirt default storage pool")
-                args = ["virsh", "vol-create-as", "--pool", "default", "--name", vol_name, "--capacity", str(os.path.getsize(img_dest)), "--format", "qcow2"]
+                args = ["virsh", "vol-create-as", "--pool", "default", "--name", vol_name, "--capacity",
+                        str(os.path.getsize(img_dest)), "--format", "qcow2"]
                 output = utils.run(args)
                 args = ["virsh", "vol-upload", "--pool", "default", "--vol", vol_name, "--file", img_dest]
                 output = utils.run(args)
@@ -583,7 +632,7 @@ class VagrantWorker(VMWorker):
 
         os.system("chown :www-data '{}'".format(vagrant_image))
         os.system("chmod g+r '{}'".format(vagrant_image))
-    
+
     def _cleanup(self):
         """Cleanup everything (remove tmp project files, etc.)
         :returns: None
@@ -612,10 +661,11 @@ class VagrantWorker(VMWorker):
         # when importing an image, the user is not allowed to specify a vagrantfile
         # for the initial configuration and setup
         if vagrantfile is None:
+            comms = "winrm" if self._os_type is "windows" else "ssh"
             vagrantfile = """
                 Vagrant.configure("2") do |config|
                     config.vm.box = "some_box_name"
-
+                    config.vm.communicator = "{comms}"
                     config.vm.provider :libvirt do |libvirt|
                       libvirt.input :type => 'tablet', :bus => 'usb'
 
@@ -626,9 +676,9 @@ class VagrantWorker(VMWorker):
                       libvirt.cpus = 1
                     end
                 end
-            """.format(
-                iso_path=os.path.join(DATA_DIR, "virtio-drivers.iso")
-            )
+            """.format(comms=comms, iso_path=os.path.join(DATA_DIR, "virtio-drivers.iso"))
+
+        # self._log.info(vagrantfile)
 
         vagrantfile = self._prepare_vagrantfile(vagrantfile, base_name, auto_shutdown=(not self._user_interaction))
 
@@ -639,7 +689,7 @@ class VagrantWorker(VMWorker):
 
         return tmpd
 
-    def _create_vagrant_box(self, image_path, box_name, copy=True, vagrantfile=None, ostype="windows"):
+    def _create_vagrant_box(self, image_path, box_name, copy=True, vagrantfile=None):
         """Create a vagrant box in ~/.vagrant.d/boxes with the appropriate folder
         structure to play nicely with vagrant.
 
@@ -668,7 +718,7 @@ class VagrantWorker(VMWorker):
 
         if vagrantfile is None:
             self._log.debug("Vagrantfile for {} is None, using default Vagrantfile".format(box_name))
-            comms = "winrm" if ostype is "windows" else "ssh"
+            comms = "winrm" if self._os_type is "windows" else "ssh"
             vagrantfile = """
                 Vagrant.configure("2") do |config|
                     config.ssh.insert_key = false
@@ -692,11 +742,11 @@ class VagrantWorker(VMWorker):
                     end
                 end
             """.format(
-                username = self._options.setdefault("username", "user"),
-                password = self._options.setdefault("password", "password"),
-                ostype   = ostype,
-                comms    = comms,
-                iso_path = os.path.join(DATA_DIR, "virtio-drivers.iso")
+                username=self._options.setdefault("username", "user"),
+                password=self._options.setdefault("password", "password"),
+                ostype=ostype,
+                comms=comms,
+                iso_path=os.path.join(DATA_DIR, "virtio-drivers.iso")
             )
 
         self._log.debug("writing Vagrant file to {}".format(os.path.join(libvirt_folder, "Vagrantfile")))
@@ -716,7 +766,8 @@ class VagrantWorker(VMWorker):
         self._log.debug("image size {}".format(image_size))
 
         virtual_size = info.setdefault("virtual size", str(image_size)).split(" ")[0]
-        virtual_size = int(re.sub(r'[^0-9\.]', '', virtual_size))
+        self._log.debug("virtual size {}".format(virtual_size))
+        virtual_size = int(float(re.sub(r'[^0-9\.]', '', virtual_size)))
         self._log.debug("virtual_size: {}".format(virtual_size))
 
         self._log.debug("creating metadata.json at {}".format(libvirt_folder))
@@ -741,7 +792,7 @@ class VagrantWorker(VMWorker):
             shutil.move(image_path, img_dest)
 
         return img_dest
-    
+
     def _prepare_vagrantfile(self, vagrantfile, base_name, auto_shutdown=False):
         vagrantfile = re.sub(r'(vm\.box\s*=\s*["\'])([^"\"]+)(["\'])', '\g<1>' + base_name + '\g<3>', vagrantfile)
 
@@ -754,6 +805,7 @@ class VagrantWorker(VMWorker):
                 """ + parts[1]
 
         return vagrantfile
+
 
 class VMManager(object):
     """VMManager class is responsible for creating and managing VM images.
@@ -788,9 +840,10 @@ class VMManager(object):
         self._on_worker_exited = opts.setdefault("on_worker_exited", None)
         self._worker_numbers = deque(range(self._max_vms))
         self._workers = {}
+        self._os_type = None
 
         if parent_log is None:
-            self._log= logging.getLogger("VMManager")
+            self._log = logging.getLogger("VMManager")
         else:
             self._log = parent_log.getChild("VMManager")
 
@@ -798,7 +851,8 @@ class VMManager(object):
     # PUBLIC
     # ---------------------------------
 
-    def import_image(self, image_path, image_name, user_interaction=False, iso_path=None, username="user", password="password", on_success=None):
+    def import_image(self, image_path, image_name, user_interaction=False, iso_path=None, username="user",
+                     password="password", on_success=None, os_type="windows"):
         """Import the image into talus with the name ``image_name``, optionally running ``vagrantfile`` on
         the newly created box and applying the changes. If ``user_interaction`` is True, worker and vnc
         info will be returned in a dict: ::
@@ -821,6 +875,9 @@ class VMManager(object):
         :returns: TODO
 
         """
+        self._os_type = os_type
+        self._log.info('import_image set os_type to {}'.format(self._os_type))
+
         return self._run_vagrant_worker(
             image_name,
             None,
@@ -829,9 +886,10 @@ class VMManager(object):
             iso_path=iso_path,
             username=username,
             password=password,
-            on_success=on_success
+            on_success=on_success,
+            os_type=self._os_type
         )
-    
+
     def delete_image(self, image_name):
         """Delete the image specified by ``image_name``. Note that this WILL NOT check for
         images that use ``image_name`` as their base.
@@ -853,7 +911,7 @@ class VMManager(object):
                 # vagrant complains constantly about missing image files, even though we remove it
                 # officially through vagrant. So we'll "delete" it by truncating the file to
                 # be an empty file
-                
+
                 with open(image_path, "wb") as f:
                     f.truncate()
 
@@ -875,9 +933,9 @@ class VMManager(object):
         # now also delete it from the libvirt pool
         conn = self._libvirt()
         try:
-          default_pool = conn.storagePoolLookupByName("default")
+            default_pool = conn.storagePoolLookupByName("default")
         except libvirt.libvirtError:
-          pass
+            pass
 
         try:
             volume_name = image_name + "_vagrant_box_image_0.img"
@@ -888,14 +946,14 @@ class VMManager(object):
             if os.path.exists(volume_path):
                 with open(volume_path, "wb") as f:
                     f.truncate()
-            #volume = default_pool.storageVolLookupByName(volume_name)
-            #if volume is not None:
-                #volume.delete()
+                    # volume = default_pool.storageVolLookupByName(volume_name)
+                    # if volume is not None:
+                    # volume.delete()
         except libvirt.libvirtError as e:
             pass
         except Exception as e:
             pass
-    
+
     def export_image(self, image_name, output_type=None):
         """Export the image specified by `image_name` to `output_type` VM image. Supported output
         types are qcow2, ova, vmdk, and vid. (TODO: vagrant box output? <name>.box?)
@@ -906,8 +964,8 @@ class VMManager(object):
         """
         # TODO should we allow this to be streamed?? ... nah
         pass
-    
-    def configure_image(self, box_name, vagrantfile, user_interaction=False, on_success=None, kvm=False):
+
+    def configure_image(self, box_name, vagrantfile, user_interaction=False, on_success=None, kvm=False, os_type="windows"):
         """Configure the existing vagrant box with the supplied vagrantfile. If ``user_interaction`` is
         True, a dict will be returned with vm worker info in the format: ::
 
@@ -927,25 +985,30 @@ class VMManager(object):
         :returns: None
 
         """
+        self._os_type = os_type
+        self._log.info('configure_image set os_type to {}'.format(self._os_type))
+
         if kvm:
             return self._run_kvm_worker(
                 box_name,
-                dest_name=None, # update the existing vagrant box image!
+                dest_name=None,  # update the existing vagrant box image!
 
                 # TODO maybe be able to provide a script to run instead of a vagrant file??
-                user_interaction=True, # no auto-configuring since it's kvm (no vagrant files)
-                on_success=on_success
+                user_interaction=True  # no auto-configuring since it's kvm (no vagrant files)
             )
         else:
+            self._log.debug('run_vagrant_working(box_name {} vagrantfile {}, user_interation {} on_success {}, os_type {})'.
+                            format(box_name, vagrantfile, user_interaction, on_success, os_type))
             return self._run_vagrant_worker(
                 box_name,
                 vagrantfile,
-                dest_name=None, # update the existing vagrant box image!
+                dest_name=None,  # update the existing vagrant box image!
                 user_interaction=user_interaction,
-                on_success=on_success
+                on_success=on_success,
+                os_type=self._os_type
             )
-    
-    def create_image(self, vagrantfile, base_name, dest_name, user_interaction=False, on_success=None):
+
+    def create_image(self, vagrantfile, base_name, dest_name, user_interaction=False, on_success=None, os_type="windows"):
         """Use the `vagrantfile` to create a new image using the vagrant
         box specified by `base_name`. If ``user_interaction`` is
         True, a dict will be returned with vm worker info in the format: ::
@@ -966,14 +1029,18 @@ class VMManager(object):
         :user_interaction: If user interaction will be allowed (will not immediately cleanup, and a vnc url will be returned)
         :returns: A VM info (including vnc connection info) if ``user_interaction`` is True; else returns None
         """
+        self._os_type = os_type
+        self._log.info('create_image set os_type to {}'.format(self._os_type))
+
         return self._run_vagrant_worker(
             base_name,
             vagrantfile,
             dest_name=dest_name,
             user_interaction=user_interaction,
-            on_success=on_success
+            on_success=on_success,
+            os_type=self._os_type
         )
-    
+
     def shutdown_vagrant_vm(self, worker_num):
         """Shutdown the VM specified by worker_num.
 
@@ -986,13 +1053,13 @@ class VMManager(object):
         self._worker_numbers.append(worker_num)
 
         self._vm_lock.release()
-    
+
     # ---------------------------------
     # PRIVATE
     # ---------------------------------
 
     def _wait_for_worker_to_exit(self, worker):
-        worker.join(2**31)
+        worker.join(2 ** 31)
         self._log.info("worker exited")
 
         del self._workers[worker._idx]
@@ -1003,7 +1070,7 @@ class VMManager(object):
 
         self._log.debug("releasing vm_lock")
         self._vm_lock.release()
-    
+
     def _run_kvm_worker(self, base_name, dest_name=None, user_interaction=True):
         """TODO: Docstring for _run_kvm_worker.
 
@@ -1018,10 +1085,12 @@ class VMManager(object):
 
         worker_num = self._next_worker_number()
         worker = KvmWorker(
-            shutil.copyfile(info["backing file"], os.path.join(self._vagrant_base, "boxes", self._box_name, "0", "libvirt", "box.img"))
+            shutil.copyfile(info["backing file"],
+                            os.path.join(self._vagrant_base, "boxes", self._box_name, "0", "libvirt", "box.img"))
         )
 
-    def _run_vagrant_worker(self, base_name, vagrantfile, dest_name=None, user_interaction=False, import_image_path=None, iso_path=None, on_success=None, **options):
+    def _run_vagrant_worker(self, base_name, vagrantfile, dest_name=None, user_interaction=False,
+                            import_image_path=None, iso_path=None, on_success=None, os_type=None, **options):
         """Run the vagrant worker with the supplied args. If dest_name is None, the existing image
         will be updated with the changes.
 
@@ -1049,6 +1118,7 @@ class VMManager(object):
             iso_path=iso_path,
             on_success=on_success,
             user_interaction=user_interaction,
+            os_type=os_type,
             **options
         )
         self._workers[worker_num] = worker
