@@ -2,5 +2,6 @@
 
 echo "stopping temporary db container (talus-db)"
 
-sudo docker kill talus-db || true
-sudo docker rm talus-db || true
+sudo docker kill talus-db 2>&1 >/dev/null || true
+sudo docker rm talus-db 2>&1 >/dev/null || true
+

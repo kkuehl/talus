@@ -1,4 +1,8 @@
 #!/bin/bash
 
-sudo docker kill talus-web
-sudo docker rm talus-web
+
+echo "stopping temporary web container (talus-web)"
+
+sudo docker kill talus-web 2>&1 >/dev/null || true
+sudo docker rm talus-web 2>&1 >/dev/null || true
+
