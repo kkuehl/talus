@@ -476,7 +476,7 @@ the :code:`talus` group in order to clone the code repository.
 Creating New Code
 ^^^^^^^^^^^^^^^^^
 
-Code can manually be manually created by creating a new tool/component folder in the
+Code can be manually created by creating a new tool/component folder in the
 :code:`talus/tools` or :code:`talus/components` folder. The name of the tool's
 directory must be the underscore-cased equivalent of the pascal-cased class name
 (confusing, I know). For example, the :code:`TestTool` class must exist in an
