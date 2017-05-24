@@ -1,6 +1,9 @@
 #!/bin/bash
+NAME=talus-amqp
+if docker ps -f name=$NAME | grep -q $NAME;
+then
+	echo "stopping temporary container ($NAME)"
+	sudo docker kill $NAME 2>&1 >/dev/null || true
+	sudo docker rm $NAME 2>&1 >/dev/null || true
+fi
 
-echo "stopping temporary amqp container (talus-amqp)"
-
-sudo docker kill talus-amqp 2>&1 >/dev/null || true
-sudo docker rm talus-amqp 2>&1 >/dev/null || true

@@ -1,7 +1,9 @@
 #!/bin/bash
-
-echo "stopping temporary db container (talus-db)"
-
-sudo docker kill talus-db 2>&1 >/dev/null || true
-sudo docker rm talus-db 2>&1 >/dev/null || true
+NAME=talus-db
+if docker ps -f name=$NAME | grep -q $NAME;
+then
+	echo "stopping temporary container ($NAME)"
+	sudo docker kill $NAME 2>&1 >/dev/null || true
+	sudo docker rm $NAME 2>&1 >/dev/null || true
+fi
 
