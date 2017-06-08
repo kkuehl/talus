@@ -2,6 +2,8 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+sudo -i sh -c "$DIR/../../../bin/install_vagrant"
+
 sudo mkdir -p /talus/data /var/log/talus/apache2
 sudo groupadd talus
 sudo useradd -M talus -g talus
@@ -9,63 +11,104 @@ sudo useradd -M talus -g talus
 sudo mkdir -p /talus/install
 
 sudo cp $DIR/../../slave/vm/prebootstrap.py /talus/install/
-cat << EOF | sudo tee /talus/install/IMAGE_SETUP_README.txt > /dev/null
-Requirements:
-=============
+cat << EOF | sudo tee /talus/install/IMAGE_SETUP_README.html > /dev/null
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+<TITLE>Talus Image Setup Instructions</TITLE>
+</HEAD>
+<H1>Requirements</H1><BR>
+<H2>All Operating Systems</H2><BR>
+<ul>
+<li>Install drivers that can be found in the mounted CDROM</li>
+<li>auto-login</li>
+<li>Python and pip installed and in PATH</li>
+<li>git installed and in PATH<BR>
+<A HREF="http://git-for-windows.github.io">Git For Windows</A></li>
+<li>Download <A HREF="prebootstrap.py">prebootstrap.py<A> set to run on login<BR>
+<pre>
+On Windows, press Windows Key + R
+Type shell:startup
+This should open up C:\Users\user\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Start-up
+Place prebootstrap.py here. Double-click on prebootstrap.py and ensure that .py extensions are associated with python.
+</pre>
+</li>
 
-All:
-----
-* install drivers that can be found in the mounted CDROM
-* auto-login
-* prebootstrap.py set to run on login
-* numpy
-* turn off auto-updates (you want your base image to be clean w/ no updates!)
-* python lxml module
-* any other python modules/dependencies that need to be compiled or
-	installed via an installer
+<li>python numpy module</li>
+<li>turn off auto-updates (you want your base image to be clean w/ no updates!)</li>
+<li>python lxml module</li>
+<li>any other python modules/dependencies that need to be compiled or installed via an installer</li>
+</ul>
 
-Windows:
---------
-Install Windows use the username user and the password password.
-Set to Autologin
+<H2>Windows</H2><BR>
+Install Windows use the username <i>user</i> and the password <i>password</i><BR>
+Set the Account Type to Administrator<BR>
 
-1. Install python https://www.python.org/downloads/windows/
-2. Download prebuilt lxml from http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
+<ol type="1">
+<li>Install python 2.7.x 32-bit for 32-bit OS or 64-bit for 64-bit OS from <A HREF="https://www.python.org/downloads/windows/">https://www.python.org/downloads/windows/</A><BR>
+Choose the install for All users option<BR>
+Be sure to select the Add python.exe to Path option<BR>
+</li>
+
+<li>Download prebuilt lxml from <A HREF="http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml">http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml</A>
+<pre>
 pip install lxml-3.6.4-cp27-cp27m-win_amd64.whl
-3. pip install requests comtypes pymongo
-4. Install WinDBG by Downloading the Windows 10 SDK
-https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk
+</pre>
+</li>
+<li><pre>pip install requests comtypes pymongo docutils chardet numpy</li>
+<li>Install WinDBG by Downloading the Windows 10 SDK<BR>
+<A HREF="https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk">https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk</A><BR>
 If you want to download only Debugging Tools for Windows, install the Windows SDK, and, during the installation, select the Debugging Tools for Windows box and clear all the other boxes.
-5. Download and extract !exploitable from https://msecdbg.codeplex.com/
-Copy x86 msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x86\winext
-Copy x64 msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x64\winext
-6. Launch command prompt as Administrator.
-  Type netplwiz
-  Select user
-  Disable Users must enter a username and password to use this computer.
-
-* Windbg
+<li>Download and extract !exploitable from <A HREF="https://msecdbg.codeplex.com/">https://msecdbg.codeplex.com/</A></li>
+Copy MSECExtensions_1_6_0\x86\msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x86\winext<BR>
+Copy MSECExtensions_1_6_0\x64\msdec.dll to c:\Program Files (x86)\Windows Kits\10\Debuggers\x64\winext<BR>
+<li>Launch command prompt as Administrator.<BR>
+Type netplwiz<BR>
+Select user<BR>
+Disable Users must enter a username and password to use this computer.<BR>
+</li>
 * potentially pre-generated fastoche comtypes python files
 * VCREDIST 2012 x86 AND x64 (for windbg msec.dll)
-* msec.dll in the winext folder of both x86 and x64 windbgs
 * psexec (all pstools?)
-* git clone https://github.com/iidx/pycdb.git
+<li>
+<pre>
+git clone https://github.com/fishstiqz/pycdb.git
 cd pycdb
 python ./setup.py install
-
-Be sure to do the following:
-
-* turn off UAC
-
-You must also configure WINRM by doing (in an Administrator cmd.exe):
-
+</pre></li>
+<li>Disable UAC<BR>
+<pre>
+Type UAC in the search field on your taskbar. (If the search field isn't visible, right-click the Start button and choose Search.)
+Click Change User Account Control settings in the search results.
+Then do one of the following:
+To turn UAC off, drag the slider down to Never notify and click OK.
+To turn UAC on, drag the slider up to the desired level of security and click OK.
+You may be prompted to confirm your selection or enter an administrator password.
+</pre>
+</li>
+<li>
+You must also configure WINRM by doing (in an Administrator cmd.exe):<BR>
+<pre>
 	winrm quickconfig -q
 	winrm set winrm/config/winrs @{MaxMemoryPerShellMB="512"}
 	winrm set winrm/config @{MaxTimeoutms="1800000"}
 	winrm set winrm/config/service @{AllowUnencrypted="true"}
 	winrm set winrm/config/service/auth @{Basic="true"}
 	sc config WinRM start= auto
-
+</pre></li>
+<li>After importing the image into talus<BR>
+<pre>
+Connect via VNC
+Open Device Manager
+Update the driver for the Ethernet controller.
+Search the D:\ drive
+Install the RedHat VirtIO Ethernet Driver
+Install the VirtIO Balloon Driver
+Shutdown the Image.
+</pre>
+</BR>
+</li>
+</ol>
 Also note that all created networks in the VM must be set the “Work”
 network. This can be set to be the default action by going to:
 
@@ -75,33 +118,30 @@ It may also help to attempt to shrink the size of the VM using sdelete
 
 	sdelete -z C:
 
-Linux:
+<h2>Linux</h2><BR>
 ------
 
-Make sure the following are installed:
+Make sure the following are installed:<br>
+<pre>sudo apt-get install -y python python-pip vim git llvm lldb openssh-server</pre>
+<pre>pip install requests comtypes lxml<pre>
 
-* sudo apt-get install -y python python-pip vim git llvm lldb openssh-server
-
-pip install requests
-pip install comtypes
-pip install lxml
-
-Be sure to do the following:
-
-* passwordless sudo
+Be sure to do the following:<br>
+passwordless sudo<br>
+<pre>
 sudo visudo and add the following:
 ALL            ALL = (ALL) NOPASSWD: ALL
+</pre>
 
 
-Prebootstrap.py
-===============
+Prebootstrap.py<br>
+<p>
 You must put the prebootstrap.py file found here onto the VM and set it
 to run on login. The prebootstrap.py script will wait for a file named
 RUN_TALUS_RUN to appear in the system's temporary directory, at which
 point it will import and run the bootstrap (and hence your jobs).
+</p>
 
-gl;hf
--d0c
+</HTML>
 EOF
 sudo chown talus:talus /talus/install
 sudo chmod -R g+ws /talus/install
@@ -110,8 +150,6 @@ mkdir -p /tmp/talus/tmp
 sudo chmod -R o+rws /tmp/talus/tmp
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
-$DIR/../../../bin/install_vagrant
 
 sudo -H pip install --upgrade pip
 #sudo pip install xmltodict mongoengine mock pymongo pika docutils netifaces pip2pi tabulate
