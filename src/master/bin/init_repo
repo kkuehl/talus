@@ -8,24 +8,13 @@ REPO_CACHE=/talus/talus_code_cache
 GITUSER=talus
 GITGROUP=talus
 
-function destroy_repo {
-	if [ -d $REPO_DIR ]; then
-	rm -rf $REPO_DIR
-	fi
-
-	if [ -d $REPO_CACHE ]; then
-	rm -rf $REPO_CACHE
-	fi
-	mongo talus --eval 'db.code.remove({ })'
-}
-
 function create_repo {
         echo -e "\nCreating git repository"
 	mkdir -p $REPO_DIR
 	groupadd -f $GITGROUP
 	useradd --create-home --skel /dev/null --home-dir $REPO_DIR -g $GITGROUP --shell /bin/false $GITUSER || true
 	chown -v $GITUSER:$GITGROUP $REPO_DIR
-	chmod -v 2770 $REPO_DIR # rwxrws---
+	chmod -v 2774 $REPO_DIR # rwxrwsr--
 	setfacl -R -m g:$GITGROUP:rwX $REPO_DIR
 	setfacl -R -m d:g:$GITGROUP:rwX $REPO_DIR
 	getfacl $REPO_DIR
@@ -39,6 +28,16 @@ function create_repo {
         sudo git config --global user.name "Talus Master"
         echo -e "\nFinished creating git repository"
 	usermod -a -G $GITGROUP root
+	usermod -a -G $GITGROUP www-data
+	echo
+	echo "-------------------------------------------------------"
+	echo "add any users who will be using this to the talus group"
+	echo " E.g.      usermod -a -G talus <USER>"
+	echo " You may have to make the user logout and log back in"
+	echo " for group changes to take affect"
+	echo "-------------------------------------------------------"
+	echo
+
 	while read -p "Enter a username to add to group $GITGROUP <Just press enter without a username when done> " username && [[ ! -z $username ]]
 	do
 		usermod -a -G $GITGROUP $username 
@@ -78,10 +77,10 @@ function init_code_cache {
         echo -e "\nCreating code cache"
         mkdir -p $REPO_CACHE
 	chown -v $GITUSER:$GITGROUP $REPO_CACHE
-        chmod -v 2770 $REPO_CACHE # rwxrws---
+        chmod -vR 2774 $REPO_CACHE # rwxrws---
         setfacl -R -m g:$GITGROUP:rwX $REPO_CACHE
         setfacl -R -m d:g:$GITGROUP:rwX $REPO_CACHE
-        getfacl $REPO_CACHE
+	getfacl $REPO_CACHE
         pushd /tmp/talus_repo_init
         echo -e "\n" >> requirements.txt
         git add requirements.txt
