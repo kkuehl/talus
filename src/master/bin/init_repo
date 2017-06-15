@@ -1,16 +1,12 @@
 #!/bin/bash
-set -e
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 REPO_DIR=/talus/talus_code.git
 REPO_CACHE=/talus/talus_code_cache
 
-GITUSER=talus
-GITGROUP=talus
-
 function create_repo {
-        echo -e "\nCreating git repository"
 	mkdir -p $REPO_DIR
+<<<<<<< HEAD
 	groupadd -f $GITGROUP
 	useradd --create-home --skel /dev/null --home-dir $REPO_DIR -g $GITGROUP --shell /bin/false $GITUSER || true
 	chown -v $GITUSER:$GITGROUP $REPO_DIR
@@ -72,59 +68,103 @@ function init_repo {
         
         popd
 	echo -e "\nFinished initializing repository"
+=======
+	cd $REPO_DIR
+	useradd talus -g talus || true
+	chown talus:talus $REPO_DIR
+
+	git init --bare --shared=group
+	chmod -R g+ws .
+	chgrp -R talus .
+	git config --global user.email "master@talus"
+	git config --global user.name "Talus Master"
+	sudo git config --global user.email "master@talus"
+	sudo git config --global user.name "Talus Master"
+	git config core.sharedRepository true
+>>>>>>> 5bf4e69d8988e42cbac5b96b39fa1f5f2ec414e8
 }
 
 function init_code_cache {
-        echo -e "\nCreating code cache"
-        mkdir -p $REPO_CACHE
-	chown -v $GITUSER:$GITGROUP $REPO_CACHE
-        chmod -vR 2774 $REPO_CACHE # rwxrws---
-        setfacl -R -m g:$GITGROUP:rwX $REPO_CACHE
-        setfacl -R -m d:g:$GITGROUP:rwX $REPO_CACHE
-	getfacl $REPO_CACHE
-        pushd /tmp/talus_repo_init
-        echo -e "\n" >> requirements.txt
-        git add requirements.txt
-        git commit -m "initial commit after hooks have been installed"
-        git push origin master
-        popd
-        echo -e "\nFinished creating code cache"
+	mkdir -p $REPO_CACHE
+	chown -R talus:talus $REPO_CACHE
+	chmod -R g+ws $REPO_CACHE
+
+	cd /tmp/talus_repo_init
+	echo -e "\n" >> requirements.txt
+	git add requirements.txt
+	git commit -m "initial commit after hooks have been installed"
+	git push origin master
+
+	chown -R talus:talus $REPO_CACHE
 }
 
 function init_pypi {
-	echo -e "\nInitializing pypi"
 	requires=talus/requirements.txt
-	pushd /tmp/talus_repo_init
+
+	cd /tmp/talus_repo_init
 	echo -e "\npymongo\ndocutils\n# $(date)" >> $requires
 	cat $requires | sort | uniq > $requires.tmp
-	mv -v $requires.tmp $requires
+	mv $requires.tmp $requires
 	git add $requires
 	git commit -m "adding requirements.txt - updating global requirements"
 	git push origin master
- 	popd
-	echo -e "\nFinished initializing pypi"
+}
+
+function init_repo {
+	git clone $REPO_DIR /tmp/talus_repo_init
+	cd /tmp/talus_repo_init
+	cp -r $DIR/../git_repo/template/* .
+	git add *
+	git reset talus/tools/tool_template
+	git reset talus/components/component_template
+
+	git commit -m "initial commit, pre hook install"
+	git push origin master
+
+	install_hooks
+
+	git add talus/components/component_template
+	git commit -m "initial commit with component template"
+	git push origin master
+
+	git add talus/tools/tool_template
+	git commit -m "2nd commit with tool template"
+	git push origin master
+
+	cd $DIR
 }
 
 function cleanup {
-        rm -rf /tmp/talus_repo_init
+	rm -rf /tmp/talus_repo_init
 }
 
 function install_hooks {
-	echo -e "\nInstalling git hooks"
-        # install the pre-receive hook
-        cp -v $DIR/../git_repo/hooks/pre-receive $REPO_DIR/hooks/pre-receive
-        chmod -v g+x $REPO_DIR/hooks/pre-receive
-        #chown -v talus:talus $REPO_DIR/hooks/pre-receive
+	# install the pre-receive hook
+	cp $DIR/../git_repo/hooks/pre-receive $REPO_DIR/hooks/pre-receive
+	chmod g+x $REPO_DIR/hooks/pre-receive
 
-        # install the post-receive hook
-        cp -v $DIR/../git_repo/hooks/post-receive $REPO_DIR/hooks/post-receive
-        chmod -v g+x $REPO_DIR/hooks/post-receive
-        #chown -v talus:talus $REPO_DIR/hooks/post-receive
+	# install the post-receive hook
+	cp $DIR/../git_repo/hooks/post-receive $REPO_DIR/hooks/post-receive
+	chmod g+x $REPO_DIR/hooks/post-receive
 }
 
+# setup the git repo
 create_repo
+
+# init the repo
 init_repo
+
 init_code_cache
+# yes do this twice
 init_pypi
+
 cleanup
 
+echo
+echo "-------------------------------------------------------"
+echo "add any users who will be using this to the talus group"
+echo " E.g.      usermod -a -G talus <USER>"
+echo " You may have to make the user logout and log back in"
+echo " for group changes to take affect"
+echo "-------------------------------------------------------"
+echo

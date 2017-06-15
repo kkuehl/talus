@@ -6,8 +6,6 @@ echo "running a temporary master container (talus-master)"
 
 mkdir -p /tmp/talus/{data/master,logs/master,tmp}
 
-
-
 if [ "$1" = "dev" ] ; then
 	shift
 	sudo docker run \
@@ -19,8 +17,8 @@ if [ "$1" = "dev" ] ; then
 		-v /tmp/talus/data:/talus/data \
 		-v "$DIR/../":/master \
 		-v /tmp/talus/tmp:/tmp \
-		-e TALUS_DB_PORT_27017_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.Networks.talus_nw.IPAddress }}' talus-db):27017 \
-		-e TALUS_AMQP_PORT_5672_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.Networks.talus_nw.IPAddress }}' talus-amqp):5672 \
+		-e TALUS_DB_PORT_27017_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' talus-db):27017 \
+		-e TALUS_AMQP_PORT_5672_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' talus-amqp):5672 \
 		--name talus-master \
 		-it \
 		$@ talus-master
@@ -36,8 +34,8 @@ else
 		-v /tmp/talus/logs:/talus/logs \
 		-v /tmp/talus/data:/talus/data \
 		-v /tmp/talus/tmp:/tmp \
-		-e TALUS_DB_PORT_27017_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.Networks.talus_nw.IPAddress }}' talus-db):27017 \
-		-e TALUS_AMQP_PORT_5672_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.Networks.talus_nw.IPAddress }}' talus-amqp):5672 \
+		-e TALUS_DB_PORT_27017_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' talus-db):27017 \
+		-e TALUS_AMQP_PORT_5672_TCP=tcp://$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' talus-amqp):5672 \
 		-it \
 		$@ talus-master
 fi

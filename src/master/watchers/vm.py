@@ -60,7 +60,6 @@ class VMWatcher(WatcherBase):
                 return
             image = images[0]
 
-        self._log.info('handle status for {}'.format(image.status["name"]))
         if image.status["name"] in switch:
             switch[image.status["name"]](id_, image)
     
@@ -99,11 +98,10 @@ class VMWatcher(WatcherBase):
         vnc_info = self._vm_manager.import_image(
             image_path,
             str(image.id), # image name
-            user_interaction=True,
-            username=image.username,
-            password=image.password,
-            on_success=self._set_image_ready,
-            os_type=image.os.type
+            user_interaction    = True,
+            username            = image.username,
+            password            = image.password,
+            on_success            = self._set_image_ready
         )
 
         from master import Master
@@ -138,11 +136,10 @@ class VMWatcher(WatcherBase):
 
         vnc_info = self._vm_manager.configure_image(
             str(image.id),
-            vagrantfile=vagrantfile,
-            user_interaction=user_interaction,
-            on_success=self._set_image_ready,
-            kvm=image.status["kvm"],
-            os_type=image.os.type
+            vagrantfile            = vagrantfile,
+            user_interaction    = user_interaction,
+            on_success            = self._set_image_ready,
+            kvm                    = image.status["kvm"]
         )
         self._log.debug("got vnc info from configure image: {!r}".format(vnc_info))
 
@@ -169,11 +166,10 @@ class VMWatcher(WatcherBase):
 
         vnc_info = self._vm_manager.create_image(
             vagrantfile,
-            base_name=str(base.id),
-            dest_name=str(image.id),
-            user_interaction=user_interaction,
-            on_success=self._set_image_ready,
-            os_type=image.os.type
+            base_name            = str(base.id),
+            dest_name            = str(image.id),
+            user_interaction    = user_interaction,
+            on_success            = self._set_image_ready
         )
 
         from master import Master
